@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+  }
+  
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    height: 100vh;
+    padding: 20px;  
+  }
+
+  .login-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto; 
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .logo {
+    color: #50d9c8;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  .input {
+    width: 95%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+  }
+
+  .remember-and-find {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    margin-bottom: 10px; 
+  }
+  
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .find_idfw-container {
+    display: flex;
+    justify-content: flex-end; 
+  }
+  
+  .find_idfw {
+    cursor: pointer;
+  }
+  
+  .login-button {
+    margin-top: 20px;
+    width: 101%;
+    padding: 12px;
+    background-color: #50d9c8;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .register-link {
+    margin-top: 10px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  

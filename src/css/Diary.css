@@ -1,0 +1,60 @@
+:root{
+    --maincolor:#67DEC2;
+    --secondColor:#BAE9DE;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#Diary{
+    background: pink;
+}
+/* .Diary-Box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-right: 100px;
+}
+
+.DiaryList {
+    width: 90%;
+    height: 90%;
+    list-style-type: none;
+    padding: 0;
+    margin-left: auto;
+    overflow-y: scroll;
+}
+
+.DiaryCard {
+    height: 100px;
+    border-radius: 5px;
+    border: 2px solid #000000;
+    margin: 10px;
+}
+
+.DiaryCard:hover {
+    background-color: #36e0b6;
+    color: #FFFFFF;
+}
+
+.DiaryTitle {
+    font-weight: 800;
+    padding-left: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.DiaryContent {
+    padding-left: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Btn-NewDiary {
+    width: 150px;
+    height: 40px;
+    margin-left: auto;
+} */
