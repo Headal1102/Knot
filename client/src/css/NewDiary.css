@@ -1,0 +1,57 @@
+.NewDiary-Box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-right: 100px;
+}
+
+.NewDiaryTitle {
+    margin-left: 100px;
+    margin-top: 50px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.NewDiaryContent {
+    height: 80%;
+    margin-left: 100px;
+    margin-top: 10px;
+    resize: none;
+    overflow-y: scroll;
+    font-size: 16px;
+}
+
+.NewDiaryBtnGroup {
+    float: right;
+    margin-left: auto;
+}
+
+.Btn-CancelDiary {  
+    width: 150px;
+    height: 40px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: #ff6969;
+    color: #ffffff;
+}
+
+.Btn-CancelDiary:hover {
+    background-color: #aa1717;
+    color: #ffffff;
+}
+
+.Btn-PostDiary {
+    width: 150px;
+    height: 40px;
+    margin-top: 5px;
+    margin-left: 5px;
+    border-radius: 5px;
+    background-color: #36e0b6;
+    color: #ffffff;
+}
+
+.Btn-PostDiary:hover {
+    background-color: #1e7b64;
+    color: #ffffff;
+}

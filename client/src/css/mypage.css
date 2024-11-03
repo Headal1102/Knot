@@ -1,0 +1,83 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing:border-box;
+}
+.myPage{
+  display: grid;
+  grid-template-columns: 170px 1fr;
+}
+/* .profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
+.myPageMain{
+  position: relative;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  min-width: 20rem;
+  height: 100vh;
+  padding-top: 3rem;
+}
+.profile-header {
+  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.userImg{
+  display: block;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 100%;
+  text-align: center;
+  background: #33c3b9;
+  margin: auto;
+}
+.userName,.userMsg,.profile-icon {
+  width: 100%;
+  display: block;
+  text-align: center;
+  border:none;
+  font-size: 1.5rem;
+  background: none;
+}
+
+.edit-status-button, .update-button, .logout-button {
+  background-color: #33c3b9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.profile-form {
+  position: relative;
+  width: 100%;
+  min-width: 10rem;
+  max-width: 30rem;
+  margin: auto;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+input {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+} 
+
