@@ -7,21 +7,24 @@ import knot1 from '../assets/Knot1.png';
 function Index() {
   const navigate = useNavigate();
   
-  const navtoSignIn = () => {
+  const navtoLogin = () => {
     navigate("/Login");
+  }
+  const navtoIndex=()=>{
+    navigate("/");
   }
   
   return (
     <>
     <nav>
-      <div id='Logos'>
-         <img src={KnotLogo} alt="" />
+      <div id='Logos' onClick={() => navtoIndex('/')}>
+         <img src={KnotLogo} alt="Knot로고사진" />
          <h1 id='Knot'>KNOT</h1>
       </div>
       <ul id='menu'>
         <li>KNOT란?</li>
         <li>팀소개</li>
-        <li onClick={() => navtoSignIn('/login')}>로그인</li>
+        <li onClick={() => navtoLogin('/login')}>로그인</li>
       </ul>
     </nav>
     <div className="container">
@@ -38,7 +41,7 @@ function Index() {
             <h2>하루의 마지막을 할 수 있는 <span className='mainColor'>다이어리 작성</span></h2>
             <h2><span className='mainColor'>KNOT</span>와 함께 해보세요!</h2>
           </div>
-        <button id='loginBar' onClick={() => navtoSignIn('/login')}>
+        <button id='loginBar' onClick={() => navtoLogin('/login')}>
           Knot와 함께하기
         </button>
       </div>
@@ -56,7 +59,12 @@ function Index() {
       로그인을 독려함
     </div>
     <footer>
-      footer
+      <div>
+        <h1>KNOT</h1>
+        <h4>프론트엔드 : 김기순 김승휘 엄다영</h4>
+        <h4>백엔드 : 김서우 박태수 양민지</h4>
+        <h5>&#169; JEIU UNIV Team.일석이조</h5>
+      </div>
     </footer>
     </>
   );

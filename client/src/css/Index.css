@@ -12,6 +12,7 @@ nav{
     position: sticky;
     top: 0;
     width: 100%;
+    min-width: 50rem;
     padding: 1rem 4rem;
     display: flex;
     justify-content: space-between;
@@ -22,6 +23,7 @@ nav{
 #Logos{
     width: 40%;
     display: flex;
+    cursor: pointer;
 }
 nav img{
     width: 4rem;
@@ -112,4 +114,18 @@ nav img{
 footer{
     background: var(--fontColor);
     height: 30vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+footer div{
+    width: 50%;
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: auto;
+}
+footer div *{
+    color:#ffffff7e
 }
