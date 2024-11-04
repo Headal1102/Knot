@@ -1,99 +1,115 @@
-.Index-Box {
-    height: 100%;
-    width: 100%;
-    background-color: #f5f5f5;
+:root{
+    --mainColor:#67DEC2;
+    --fontColor:#2c2c2c;
+    --white:#f5f5f5;
 }
-
-.TopMenu {
-    height: 80px;
-    width: 100%;
-    background-color: #ffffff;
-    padding: 0;
+*{
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-
-.Index-Logo{
-    float: left;
-    height: 70px;
-    width: 200px;
-    background-image: url("../assets/logo.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    text-align: right;
-    align-content: center;
-    color: #68dec4;
-    font-size: 50px;
-}
-
-.TopMenuGroup {
-    height: 80px;
-    float: right;
-    align-content: center;
-}
-
-.TopMenu-Nav {
-    padding: 5px;
-    margin: 50px;
-    color: #000000;
-    font-size: 20px;
-}
-
-.Introduce {
-    height: calc(100% - 80px);
+nav{
+    position: sticky;
+    top: 0;
     width: 100%;
-    overflow: scroll;
+    padding: 1rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    background: #ffffffe0;
+    z-index: 100;
+    align-items: center;
 }
-
-.intro_1 {
-    width: 100%;
-    height: 100vh;
-    background-image: url(../assets/intro_1.png);
-    background-size: cover;
-    background-repeat: no-repeat;
+#Logos{
+    width: 40%;
+    display: flex;
 }
-
-.intro_2 {
-    width: 100%;
-    height: 100vh;
-    background-image: url(../assets/intro_2.png);
-    background-size: cover;
-    background-repeat: no-repeat;
+nav img{
+    width: 4rem;
 }
-
-.intro_3 {
-    width: 100%;
-    height: 100vh;
-    background-image: url(../assets/intro_3.png);
-    background-size: cover;
-    background-repeat: no-repeat;
+#Knot{
+    color: var(--mainColor);
+    font-size: 3.5rem;
 }
-
-.intro_4 {
-    width: 100%;
-    height: 100vh;
-    background-image: url(../assets/intro_4.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
-.intro_btnSignIn1 {
-    width: 20vw;
-    height: 7vh;
+#menu{
     position: relative;
-    top: 60%;
-    left: 69%;
-    color: #2c2c2c;
-    background-color: #68dec4;
-    border-radius: 15px;
+    width: 20%;
+    height: 5rem;
+    min-height: 5rem;
+    max-height: 5rem;
+    min-width: 20rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    list-style: none;
 }
-
-.intro_btnSignIn2 {
-    width: 20vw;
-    height: 7vh;
+#menu li{
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+#menu li:hover{
+    color: var(--mainColor);
+}
+.container{
+    height: 100vh;
+    padding: 1rem 3rem;
+    background: var(--white);
+}
+.container:nth-child(2){
+    display: grid;
+    grid-template-columns: 6fr 3fr;
+}
+#knotImg1{
     position: relative;
-    top: 60%;
-    left: 40vw;
-    color: #2c2c2c;
-    background-color: #68dec4;
-    border-radius: 15px;
+    width: 90%;
+    min-width: 50rem;
+    top: 5%;
+    left: 3%;
+    transform: translate(-50%,-50%);
+    transform: rotate(-5deg);
+    z-index: 5;
+}
+#KnotLogo{
+    position: relative;
+    width: 35%;
+    z-index: 10;
+    left: 70%;
+    bottom: 25%;
+    transform: rotate(10deg);
+}
+#container1-2{
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    top: 5rem;
+    height: 50%;
+    padding: 5rem 2rem;
+    gap: 1rem;
+}
+#desTop{
+    font-size: 3rem;
+    color:var(--mainColor)
+}
+#loginBar{
+    width: 100%;
+    height: 5rem;
+    background: var(--mainColor);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255);
+}
+#loginBar:hover{
+}
+.mainColor{
+    color: var(--mainColor);
+    font-weight: 900;
+}
+.container:nth-child(3){
+    background: var(--mainColor);
+}
+footer{
+    background: var(--fontColor);
+    height: 30vh;
 }
