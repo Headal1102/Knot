@@ -6,7 +6,7 @@ const pool = mysql.createPool({
     user: 'root',
     password: '0512',
     database: 'Knot',
-    port: 3308,
+    port: 3307,
     waitForConnections: true,
     connectionLimit: 10,    // 최대 연결 개수 설정
     queueLimit: 0

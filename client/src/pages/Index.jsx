@@ -4,6 +4,10 @@ import Login from './Login';
 import '../css/Index.css'
 import KnotLogo from '../assets/logo.png'
 import knot1 from '../assets/Knot1.png';
+import { FaSquareCheck } from "react-icons/fa6";
+import { BsCalendar2WeekFill } from "react-icons/bs";
+import { BiSolidBook } from "react-icons/bi";
+import { FaUser } from "react-icons/fa6";
 function Index() {
   const navigate = useNavigate();
   
@@ -46,17 +50,41 @@ function Index() {
         </button>
       </div>
     </div>
-    <div className="container">
-      팀소개 & 제작한 이유
+    <div id='#KNOT' className="container">
+      <h1 className='white what'>KNOT란 무엇인가요?</h1>
+      <h1 className='white'>팀 일석이조의 일정 정리 웹 사이트 입니다.</h1>
+      <div className="round"></div>
+      <div className="round2"></div>
     </div>
     <div className="container">
-      기능들1
+      <div>
+        <FaUser/>
+        <h1>유저only</h1>
+      </div>
+      <div>
+        <BsCalendar2WeekFill/>
+        <h1>일정 관리</h1>
+      </div>
+      <div>
+        <FaSquareCheck/>
+        <h1>투두리스트</h1>
+      </div>
+      <div>
+        <BiSolidBook/>
+        <h1>다이어리</h1>
+      </div> 
     </div>
     <div className="container">
-      기능들2
+      기능들 자세하게 소개
     </div>
     <div className="container">
-      로그인을 독려함
+      <h1></h1>
+    </div>
+    <div className="container">
+      <div>
+        <h1>KNOT와 함께하는 더 나은 하루</h1>
+        <button onClick={() => navtoLogin('/login')}>지금 시작하기</button>
+      </div>
     </div>
     <footer>
       <div>

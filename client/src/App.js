@@ -10,6 +10,9 @@ import FindFW from './pages/FindFW';
 import Index from './pages/Index';
 import Main from './pages/Main';
 import MyPage from './pages/Mypage';
+import Diary from './pages/Diary';
+import DiaryNew from './pages/DiaryNew';
+import DiaryEdit from './pages/DiaryEdit';
 import axios from 'axios';
 
 function App() {
@@ -23,6 +26,9 @@ function App() {
         <Route path="/findId" element={<FindID />} />
         <Route path="/findPw" element={<FindFW />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/diary/:id" element={<Diary />} />
+        <Route path="/diary/:id/new" element={<DiaryNew />} />
+        <Route path="/diary/:id/edit" element={<DiaryEdit />} />
       </Routes>
     </Router>
   );

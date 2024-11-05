@@ -4,7 +4,8 @@ import { IoIosAddCircleOutline } from 'react-icons/io';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { LuPencil } from 'react-icons/lu';
 
-function Todo() {
+function Todo(props) {
+  const user=props.userName;
   const [sections, setSections] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [editingSectionId, setEditingSectionId] = useState(null);
@@ -21,7 +22,6 @@ function Todo() {
       try {
         const sectionsResponse = await fetch('http://localhost:8080/api/todo/sections');
         const todosResponse = await fetch('http://localhost:8080/api/todo/todos');
-    
         if (!sectionsResponse.ok || !todosResponse.ok) {
           throw new Error('데이터 불러오기 실패');
         }

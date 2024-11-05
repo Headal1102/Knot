@@ -10,7 +10,7 @@ router.get('/sections', (req, res) => {
         return res.status(400).json({ error: '세션에 사용자 정보가 없습니다.' });
     }
 
-    const query = 'SELECT id, todoCg AS name FROM todo WHERE userId = ?';
+    const query = 'SELECT id, TodoCg AS name FROM todo WHERE userId = ?';
     pool.execute(query, [userId], (error, results) => {
         if (error) {
             return res.status(500).json({ error: '데이터 조회 중 오류 발생', details: error.message });

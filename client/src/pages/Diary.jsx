@@ -1,15 +1,3 @@
-// ===============================================================
-// Title : Main.js
-// ===============================================================
-// Description :
-// This file is for '/main' page.
-// ===============================================================
-// Author : EomDayoeng
-// Last Modified : 2024.10.25
-// Version : 1.0
-// ===============================================================
-
-// <<< Library >>> //
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
@@ -21,8 +9,8 @@ import DatePicker from 'react-datepicker';
 // // <<< Page >>> //
 // import SignIn from "./SignIn";
 // import Diary from "./Diary";
-// import DiaryNew from "./DiaryNew";
-// import DiaryEdit from "./DiaryEdit";
+import DiaryNew from "./DiaryNew";
+import DiaryEdit from "./DiaryEdit";
 
 // <<< CSS >>> //
 // import "./Main.css";
@@ -54,14 +42,14 @@ export default function Diary()  {
   const [startDate, setStartDate] = useState(new Date());
 
   return (
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route path="/signin" element={<SignIn />} />
-    //     <Route path="/diary/:id" element={<Diary />} />
-    //     <Route path="/diary/:id/new" element={<DiaryNew />} />
-    //     <Route path="/diary/:id/edit" element={<DiaryEdit />} />
-    //   </Routes>
-    // </BrowserRouter>,
+    <BrowserRouter>
+      <Routes>
+       
+        <Route path="/diary/:id" element={<Diary />} />
+        <Route path="/diary/:id/new" element={<DiaryNew />} />
+        <Route path="/diary/:id/edit" element={<DiaryEdit />} />
+      </Routes>
+    </BrowserRouter>,
     <>
       {/* <SideBar /> */}
       <div className="Main-Box">
@@ -88,20 +76,6 @@ export default function Diary()  {
             </div>
             <div className="DiaryLists-Box">
               <ul className="DiaryLists">
-                <li className="DiaryList-Card">
-                  <div className="DiaryList-CardSplitter" onClick={() => navtoDiary(1)}>
-                    <p className="DiaryList-Title">Hi, this is title of Diary 1</p>
-                    <p className="DiaryList-Content">And this is content of Diary 1</p>
-                  </div>
-                  <button className="Btn-DeleteDiary" onClick={() => deleteDiary(1)}></button>
-                </li>
-                <li className="DiaryList-Card">
-                  <div className="DiaryList-CardSplitter" onClick={() => navtoDiary(1)}>
-                    <p className="DiaryList-Title">Hi, this is title of Diary 1</p>
-                    <p className="DiaryList-Content">And this is content of Diary 1</p>
-                  </div>
-                  <button className="Btn-DeleteDiary" onClick={() => deleteDiary(1)}></button>
-                </li>
               </ul>
             </div>
           </div>

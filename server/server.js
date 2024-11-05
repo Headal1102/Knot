@@ -43,6 +43,7 @@ const EmailRouter=require('./routes/email');
 const FindIdPswRouter=require('./routes/find');
 const userDataRouter=require('./routes/userData');
 const todoRouter=require('./routes/todo');
+const diaryRoutes = require('./routes/diaryRoutes');
 // const { request } = require('http');
 
 
@@ -55,6 +56,7 @@ app.use('/api/email',EmailRouter);
 app.use('/api/find',FindIdPswRouter);
 app.use('/api/userData',userDataRouter);
 app.use('/api/todo',todoRouter);
+app.use('/api/diaries', diaryRoutes);
 
 //로그아웃
 app.get('/api/logout',(req,res)=>{
