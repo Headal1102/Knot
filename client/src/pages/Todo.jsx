@@ -81,6 +81,7 @@ function Todo(props) {
 
   const addTodo = async () => {
     const newTodo = { date: '2024.00.00', content: [{ id: 1, text: '내용 1' }], completed: false, section: activeTab };
+    setTodos([...todos, data]);
     const response = await fetch('http://localhost:8080/todos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

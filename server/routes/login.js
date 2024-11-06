@@ -49,6 +49,7 @@ router.post('/', (req, res) => {
    
     req.session.userId=userId;
     req.session.userName=userName;
+    console.log(req.session);
     req.session.save(()=>{
         res.json(req.session);  
     })

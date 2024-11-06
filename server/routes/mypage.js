@@ -40,9 +40,11 @@ router.post('/logout',(req,res)=>{
 });
 
 router.put('/modify',(req,res)=>{
+    const userId=req.body.userId;
     const userName=req.body.userName;
     const userMsg=req.body.userMsg;
-    const userId=req.body.userId;
+    const userBirth=req.body.userBirth;
+    const userGender=req.body.userGender;
 
         // MySQL 연결
         connection.connect((err) => {
@@ -52,21 +54,21 @@ router.put('/modify',(req,res)=>{
             }
         })
 
-        const query = 'update table user set userName=?,userMsg=? where userId=?;';
-        connection.query(query, [userName,userMsg, userId],(err, results) => {
+        const query = 'update user set userName=?,userMsg=?,userBirth=?,userGender=? where userId=?;';
+        connection.query(query, [userName,userMsg,userBirth.substring(0, 10),userGender, userId],(err, results) => {
             if (err) {
                 console.error('쿼리 실행 실패:', err);
                 res.status(500).json({ error: 'Query execution failed' });
             } else {
-                console.log('탈퇴하였습니다.');
+                console.log('회원정보 수정완료');
+                res.status(201).json({ message: '회원정보 수정완료' });
             } 
         });
-        connection.end();
 });
 
 router.delete('/bye',(req,res)=>{
-    const { userId } = req.body.userId;  // req.body에서 userId 가져오기
-    const { userPsw } = req.body.userPsw;
+    const { userId } = req.body.user;  // req.body에서 userId 가져오기
+    // const { userPsw } = req.body.userPsw;
 
     // MySQL 연결
     connection.connect((err) => {
@@ -75,17 +77,18 @@ router.delete('/bye',(req,res)=>{
             return res.status(500).json({ error: 'Database connection failed' });
         }
 
-        const query = 'Delete from user where userId=? and userPsw=?;';
-        connection.query(query, [userId, userPsw],(err, results) => {
+        const query = 'Delete from user where userId=?;';
+        connection.query(query, [userId],(err, results) => {
             if (err) {
                 console.error('쿼리 실행 실패:', err);
                 res.status(500).json({ error: 'Query execution failed' });
             } else {
+                console.log(userId);
                 console.log('탈퇴하였습니다.');
+                console.log('Delete results:', results);
+                res.status(201).json({ message: '회원탈퇴완료' });
             } 
         });
-        // 연결 종료
-        connection.end();
     });
 });
 module.exports = router;

@@ -160,7 +160,7 @@ export default function Signup() {
         </div>
         <div className="gender-jf">
           <label>성별 : </label>
-          <select name="gender" value={userGender} onChange={(e) => setuserGender(e.target.value)}>
+          <select value={userGender} onChange={(e) => setuserGender(e.target.value)}>
             <option value="F">여</option>
             <option value="M">남</option>
             <option value="N">밝히고 싶지않음</option>

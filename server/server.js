@@ -70,17 +70,17 @@ app.get('/api/logout',(req,res)=>{
     });
 });
 
-// app.get('/api/session',(req,res)=>{
-//     console.log("세션"+JSON.stringify(req.session)); //undefined??/
-//     if(req.session.userId!==null){
-//         console.log('hi');
-//         console.log(req.session.userId);
-//         return res.json({
-//             "userId":req.session.userId,
-//             "userName":req.session.userName
-//         })
-//     }
-// });
+app.get('/api/session',(req,res)=>{
+    console.log(req.session); //undefined??/
+    if(req.session.userId!==null){
+        console.log('hi');
+        console.log(req.session.userId);
+        return res.json({
+            "userId":req.session.userId,
+            "userName":req.session.userName
+        })
+    }
+});
 
 app.get('/check-state', (req, res) => {
     res.json({ state: req.session.state || 0 ,
