@@ -1,0 +1,29 @@
+:root{
+    --maincolor:#67DEC2;
+    --secondColor:#BAE9DE;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body::-webkit-scrollbar{
+    display: none;
+}
+.Main{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 170px 1fr 1fr;
+    justify-content: space-between;
+}
+#first{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+#first,#second{
+    padding: 0 1rem;
+}
+#Diary{
+    position: relative;
+    height: 100vh;
+}

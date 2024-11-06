@@ -1,0 +1,131 @@
+:root{
+    --mainColor:#67DEC2;
+    --fontColor:#2c2c2c;
+    --white:#f5f5f5;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+nav{
+    position: sticky;
+    top: 0;
+    width: 100%;
+    min-width: 50rem;
+    padding: 1rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    background: #ffffffe0;
+    z-index: 100;
+    align-items: center;
+}
+#Logos{
+    width: 40%;
+    display: flex;
+    cursor: pointer;
+}
+nav img{
+    width: 4rem;
+}
+#Knot{
+    color: var(--mainColor);
+    font-size: 3.5rem;
+}
+#menu{
+    position: relative;
+    width: 20%;
+    height: 5rem;
+    min-height: 5rem;
+    max-height: 5rem;
+    min-width: 20rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    list-style: none;
+}
+#menu li{
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+#menu li:hover{
+    color: var(--mainColor);
+}
+.container{
+    height: 100vh;
+    padding: 1rem 3rem;
+    background: var(--white);
+}
+.container:nth-child(2){
+    display: grid;
+    grid-template-columns: 6fr 3fr;
+}
+#knotImg1{
+    position: relative;
+    width: 90%;
+    min-width: 50rem;
+    top: 5%;
+    left: 3%;
+    transform: translate(-50%,-50%);
+    transform: rotate(-5deg);
+    z-index: 5;
+}
+#KnotLogo{
+    position: relative;
+    width: 35%;
+    z-index: 10;
+    left: 70%;
+    bottom: 25%;
+    transform: rotate(10deg);
+}
+#container1-2{
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    top: 5rem;
+    height: 50%;
+    padding: 5rem 2rem;
+    gap: 1rem;
+}
+#desTop{
+    font-size: 3rem;
+    color:var(--mainColor)
+}
+#loginBar{
+    width: 100%;
+    height: 5rem;
+    background: var(--mainColor);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255);
+}
+#loginBar:hover{
+}
+.mainColor{
+    color: var(--mainColor);
+    font-weight: 900;
+}
+.container:nth-child(3){
+    background: var(--mainColor);
+}
+footer{
+    background: var(--fontColor);
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+footer div{
+    width: 50%;
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: auto;
+}
+footer div *{
+    color:#ffffff7e
+}

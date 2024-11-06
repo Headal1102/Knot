@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+  }
+  
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .logo {
+    color: #50d9c8;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  .input-group {
+    margin-bottom: 5px;
+  }
+  .findfw-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto; 
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .input-fw {
+    width: 95%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+  }
+  
+  .find-fw {
+    width: 101%;
+    padding: 12px;
+    background-color: #50d9c8;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 25px;
+  }
+  
+  .register-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }  
