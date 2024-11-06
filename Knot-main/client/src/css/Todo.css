@@ -1,12 +1,25 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+svg{
+  height: 100%;
+  align-items: center;
+}
 .app-container {
   position: relative;
-  left: -250px;
-  bottom: -300px;
+  width: 100%;
+  height: 100%;
+  /* left: -250px;
+  bottom: -300px; */
 }
 
 /* 전체 컨테이너 스타일 */
 .todo-container {
-    width: 500px;
+    width: 100%;
+    max-width: 900px;
+    min-width: 500px;
     margin: auto;
     background-color: white;
     border: 1px solid #ccc;
@@ -23,16 +36,22 @@
     justify-content: space-between;
     align-items: center;
 }
-
-.tab-container {
-  margin: auto;
-  max-width: 500px; /* 최대 너비 설정 */
+.tab-container{
+  position: relative;
   display: flex;
-  align-items: center;
-  height: 40px; /* 높이 설정 */
+  align-items:end;
 }
+/* .tab-container {
+  margin: auto; */
+  /* max-width: 500px; 최대 너비 설정 */
+  /* display: flex;
+  align-items: center; */
+  /* height: 40px; 높이 설정 */
+/* } */
 
-.arrow-btn {
+.arrow-btn{
+}
+/* .arrow-btn {
   background-color: #67dec2;
   color: white;
   border: none;
@@ -40,19 +59,18 @@
   cursor: pointer;
   border-radius: 5px;
   margin: 0 5px; /* 버튼 간격 */
-}
+/* } */ 
 
-.arrow-btn:disabled {
+/* .arrow-btn:disabled {
   background-color: #c3e7e5;
   cursor: not-allowed; /* 비활성화 시 커서 모양 */
-}
+/* } */
 
 h2 {
   margin-right: 10px;
   white-space: nowrap;
 }
-
-.tab {
+/* .tab {
   padding: 10px 20px;
   background-color: #c3e7e5;
   border: 1px solid #ccc;
@@ -62,14 +80,23 @@ h2 {
   cursor: pointer;
   margin-right: 5px;
   white-space: nowrap;
+} */
+.tab{
+  position: relative;
+  width: 100px;
+  color: #2c2c2c;
+  background-color: #ffffff;
+  margin: 0;
 }
-
-.active-tab {
+.active-tab{
+  background-color: #67dec2;
+}
+/* .active-tab {
   background-color: #c3e7e5;
   font-weight: bold;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-}
+} */
 
 .tab-name {
   width: 60px;
@@ -82,12 +109,14 @@ h2 {
   margin-right: 5px;
   text-align: center;
 }
-
 .add-tab-btn {
+  position: relative;
+}
+/* .add-tab-btn {
   background-color: white;
   border: none;
   cursor: pointer;
-}
+} */
 
 /* 섹션 내용 스타일 */
 .section-content {
@@ -101,8 +130,16 @@ h2 {
   display: flex;
   align-items: center;
 }
+.delete-section-btn{
+  position: relative;
+  width: 20%;
+  background: #2c2c2c;
+  margin-left: auto;
+  margin-bottom: 0;
+}
 
-.delete-section-btn {
+
+/* .delete-section-btn {
   padding: 10px 15px;
   background-color: red;
   color: white;
@@ -111,7 +148,7 @@ h2 {
   border: none;
   border-radius: 5px;
   white-space: nowrap;
-}
+} */
 
 /* 할일 리스트 스타일 */
 .todo-list {
@@ -172,9 +209,13 @@ h2 {
     cursor: pointer;
     margin-left: 5px;
 }
-
+.add-todo-btn{
+  width: 200px;
+  background-color: #67dec2;
+  color: #2c2c2c;
+}
 /* 투두 추가 버튼 */
-.add-todo-btn {
+/* .add-todo-btn {
   background-color: #c3e7e5;
   border-radius: 5px;
   padding: 8px;
@@ -184,4 +225,4 @@ h2 {
   display: block;
   position: relative;
   left: 850px;
-}
+} */

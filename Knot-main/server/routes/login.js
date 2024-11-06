@@ -13,6 +13,7 @@ const connection = mysql.createConnection({
     password: process.env.DB_PASSWORD,           // MySQL 비밀번호
     database: process.env.DB_NAME        // 사용할 데이터베이스 이름
 });
+
 //로그인
 router.post('/', (req, res) => {
     const userId = req.body.userId || null;

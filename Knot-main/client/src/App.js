@@ -6,12 +6,12 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import FindID from './pages/FindID';
 import FindFW from './pages/FindFW';
-import Todo from './pages/Todo';
 // import Info from './pages/Info';
 import Index from './pages/Index';
 import Main from './pages/Main';
 import MyPage from './pages/Mypage';
 import axios from 'axios';
+import Todo from './pages/Todo';
 
 function App() {
   return (
