@@ -1,9 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
-// import SideToolBar from "../components/SideToolBar";
 import Main from "./Main";
 import "../css/DiaryEdit.css";
-
 // <<< Page Render >>> //
 function DiaryEdit() {
   const { id } = useParams();

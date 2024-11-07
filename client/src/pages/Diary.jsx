@@ -1,57 +1,45 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SideBar from './sideBar';
+import '../css/Diary.css';
 import DatePicker from 'react-datepicker';
 
-// <<< Component >>> //
-// import SideToolBar from "../components/SideToolBar";
-// import SideBar from './sideBar';
-
-// // <<< Page >>> //
-// import SignIn from "./SignIn";
-// import Diary from "./Diary";
-import DiaryNew from "./DiaryNew";
-import DiaryEdit from "./DiaryEdit";
-
-// <<< CSS >>> //
-// import "./Main.css";
-import '../css/Diary.css';
-import "react-datepicker/dist/react-datepicker.css";
-
-
-
-// <<< Page Render >>> //
-export default function Diary()  {
+function Diary() {
+  const [diaries, setDiaries] = useState([]);
+  const [error, setError] = useState(null);   // 오류 상태 추가
   const navigate = useNavigate();
-  
-  const navtoDiaryNew = (id) => {
-    navigate("/diary/" + id + "/new");
-  }
-  
-  const navtoDiary = (id) => {
-    navigate("/diary/" + id);
-  }
-  
-  const deleteDiary = () => {
-    if (window.confirm("삭제하시겠습니까?")) {
-      //Hint : 여기에 다이어리 삭제와 관련된 백엔드와의 연동 내용 작성
 
-      window.location.reload();
-    }
-  }
+  // 다이어리 목록을 백엔드에서 불러오는 useEffect (GET 요청)
+  useEffect(() => {
+    fetch('http://localhost:8080/api/diaries')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => setDiaries(data.diaries)) // 다이어리 데이터를 상태에 저장
+      .catch((error) => {
+        setError(error.message);
+        console.error('Error fetching diaries:', error); // 오류 로그 출력
+      });
+  }, []);
 
-  const [startDate, setStartDate] = useState(new Date());
+  const navtoNewDiary = () => {
+    navigate("/newdiary");
+  };
 
+  const navtoOpenDiary = (id) => {
+    navigate("/opendiary/" + id);
+  };
+
+  // if (error) {
+  //   return <div>오류 발생: {error}</div>;
+  // }
+  // const [startDate, setStartDate] = useState(new Date());
+  
   return (
-    <BrowserRouter>
-      <Routes>
-       
-        <Route path="/diary/:id" element={<Diary />} />
-        <Route path="/diary/:id/new" element={<DiaryNew />} />
-        <Route path="/diary/:id/edit" element={<DiaryEdit />} />
-      </Routes>
-    </BrowserRouter>,
     <>
-      {/* <SideBar /> */}
       <div className="Main-Box">
         <div className="Split-Row">
           {/* <div className="Split-Column"> */}
@@ -66,21 +54,34 @@ export default function Diary()  {
             <h3 id="Menu-Title">Diary</h3>
             <div className="Diary-Menu">
               <div className="Diary-NewDateForm">
-                <DatePicker
+                {/* <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   dateFormat="yyyy-MM-dd"
-                />
+                /> */}
               </div>
-              <button className="Btn-NewDiary" onClick={() => navtoDiaryNew(1)}></button>
+              <button className="Btn-NewDiary" onClick={() => navtoNewDiary(1)}></button>
             </div>
             <div className="DiaryLists-Box">
               <ul className="DiaryLists">
+              {diaries.length > 0 ? (
+            diaries.map((diary) => (
+              <li key={diary.id} className="DiaryCard" onClick={() => navtoOpenDiary(diary.id)}>
+                <p className="DiaryTitle">{diary.title}</p>
+                <p className="DiaryContent">{diary.content}</p>
+              </li>
+            ))
+          ) : (
+            <p>작성된 다이어리가 없습니다.</p>
+          )}
               </ul>
             </div>
           </div>
         </div>
       </div>
+
     </>
   );
 }
+
+export default Diary;

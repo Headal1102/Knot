@@ -52,7 +52,7 @@ function Index() {
     </div>
     <div id='#KNOT' className="container">
       <h1 className='white what'>KNOT란 무엇인가요?</h1>
-      <h1 className='white'>팀 일석이조의 일정 정리 웹 사이트 입니다.</h1>
+      <h1 className='white'>'투두리스트'와 '다이어리'가 있는 일정 관리 사이트 입니다.</h1>
       <div className="round"></div>
       <div className="round2"></div>
     </div>
@@ -75,10 +75,10 @@ function Index() {
       </div> 
     </div>
     <div className="container">
-      기능들 자세하게 소개
+      투두리스트
     </div>
     <div className="container">
-      <h1></h1>
+      다이어리
     </div>
     <div className="container">
       <div>
