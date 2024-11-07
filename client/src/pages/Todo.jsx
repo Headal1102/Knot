@@ -5,6 +5,8 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import { LuPencil } from 'react-icons/lu';
 
 function Todo() {
+  const userId = sessionStorage.getItem('userId'); // sessionStorage에서 userId 가져오기
+
   const [sections, setSections] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [editingSectionId, setEditingSectionId] = useState(null);
@@ -19,23 +21,27 @@ function Todo() {
     const fetchData = async () => {
       try {
         const sectionsResponse = await fetch('http://localhost:8080/api/todo/sections', {
-          method: 'GET',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }), // userId 포함
           credentials: 'include',
         });
         const todosResponse = await fetch('http://localhost:8080/api/todo/todos', {
-          method: 'GET',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }), // userId 포함
           credentials: 'include',
         });
-  
+
         if (!sectionsResponse.ok) throw new Error('섹션 데이터 불러오기 실패');
         if (!todosResponse.ok) throw new Error('할 일 데이터 불러오기 실패');
-  
+
         const sectionsData = await sectionsResponse.json();
         const todosData = await todosResponse.json();
-  
+
         setSections(sectionsData);
         setTodos(todosData);
-  
+
         if (sectionsData.length > 0) {
           setActiveTab(sectionsData[0].TodoCg);
         } else {
@@ -45,9 +51,9 @@ function Todo() {
         console.error('데이터 로딩 중 오류:', error);
       }
     };
-  
+
     fetchData();
-  }, []);
+  }, [userId]);
 
   const addSection = async () => {
     let newSectionNumber = 1;
@@ -58,7 +64,7 @@ function Todo() {
       newSectionName = `섹션 ${newSectionNumber}`;
     }
 
-    const newSection = { todosection: newSectionName };
+    const newSection = { todosection: newSectionName, userId };
     const response = await fetch('http://localhost:8080/api/todo/addSection', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -89,12 +95,7 @@ function Todo() {
     const newTodoNumber = currentSectionTodos.length + 1;
     const newTodoText = `내용 ${newTodoNumber}`;
 
-    const newTodo = {
-      todoText: newTodoText,
-      todoDate: new Date().toISOString().split('T')[0],
-      todoCheck: 'n',
-      todoCg: activeTab,
-    };
+    const newTodo = { todoText: newTodoText, todoCg: activeTab, userId };
 
     const response = await fetch('http://localhost:8080/api/todo/addTodo', {
       method: 'POST',
@@ -119,7 +120,7 @@ function Todo() {
       const response = await fetch('http://localhost:8080/api/todo/changeSection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ oldSection: sectionId, newSection: editedSectionName }),
+        body: JSON.stringify({ oldSection: sectionId, newSection: editedSectionName, userId }),
         credentials: 'include',
       });
 
@@ -142,7 +143,7 @@ function Todo() {
     const response = await fetch('http://localhost:8080/api/todo/dropSection', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ todosection: sectionId }),
+      body: JSON.stringify({ todosection: sectionId, userId }),
       credentials: 'include'
     });
 
@@ -156,7 +157,7 @@ function Todo() {
     const response = await fetch('http://localhost:8080/api/todo/deleteTodo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ todoText: todoId, todoCg: activeTab }),
+      body: JSON.stringify({ todoText: todoId, todoCg: activeTab, userId }),
       credentials: 'include'
     });
 
@@ -169,7 +170,7 @@ function Todo() {
     const response = await fetch('http://localhost:8080/api/todo/toggleTodoCheck', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ todoText: todoId, todoCg: activeTab }),
+      body: JSON.stringify({ todoText: todoId, todoCg: activeTab, userId }),
       credentials: 'include'
     });
 
@@ -178,6 +179,46 @@ function Todo() {
         todo.todoText === todoId ? { ...todo, todoCheck: todo.todoCheck === 'n' ? 'y' : 'n' } : todo
       ));
     }
+  };
+
+  const startEditingTodo = (todoId, content) => {
+    setTodos(todos.map(todo => (todo.todoText === todoId ? { ...todo, editing: true } : todo)));
+    setEditContent(prev => ({ ...prev, [todoId]: content }));
+  };
+
+  const editTodo = async (oldTodoText, newTodoText) => {
+    if (!editContent[oldTodoText]) {
+      console.error('수정할 내용이 비어 있습니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/api/todo/editTodo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldTodoText, newTodoText, todoCg: activeTab, userId }),
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const updatedTodos = todos.map(todo =>
+          todo.todoText === oldTodoText
+            ? { ...todo, todoText: newTodoText, editing: false }
+            : todo
+        );
+        setTodos(updatedTodos);
+        setEditContent(prev => ({ ...prev, [oldTodoText]: '' }));
+      } else {
+        console.error('수정 중 오류 발생');
+      }
+    } catch (error) {
+      console.error('네트워크 오류 발생:', error);
+    }
+  };
+
+  const handleEditContentChange = (todoId, event) => {
+    const { value } = event.target;
+    setEditContent(prev => ({ ...prev, [todoId]: value }));
   };
 
   return (
@@ -234,11 +275,32 @@ function Todo() {
                   type="checkbox"
                   checked={todo.todoCheck === 'y'}
                   onChange={() => toggleCompleted(todo.todoText)}
+                  style={{ marginRight: '10px' }}
                 />
-                <div>{todo.todoText}</div>
-                <button onClick={() => deleteTodo(todo.todoText)}>
-                  <FaRegTrashAlt size={20} />
-                </button>
+                {todo.editing ? (
+                  <input
+                    type="text"
+                    value={editContent[todo.todoText]}
+                    onChange={(e) => handleEditContentChange(todo.todoText, e)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        editTodo(todo.todoText, editContent[todo.todoText]);
+                      }
+                    }}
+                    onBlur={() => editTodo(todo.todoText, editContent[todo.todoText])}
+                    style={{ flexGrow: 1 }}
+                  />
+                ) : (
+                  <span>{todo.todoText}</span>
+                )}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '5px' }}>
+                  <button onClick={() => startEditingTodo(todo.todoText, todo.todoText)} className="icon-btn">
+                    <LuPencil size={20} />
+                  </button>
+                  <button onClick={() => deleteTodo(todo.todoText)} className="icon-btn">
+                    <FaRegTrashAlt size={20} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
