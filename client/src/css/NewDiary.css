@@ -42,7 +42,7 @@ select,input,textarea{
     font-size: 1.2rem;
 }
 input:hover,textarea:hover{
-    border: 3px #36e0b6;
+    border: 3px #67dec2;
 }
 .NewDiaryBtnGroup {
     float: right;
