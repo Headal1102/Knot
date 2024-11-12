@@ -16,6 +16,8 @@ import MyPageModify from './pages/myPageModify';
 import axios from 'axios';
 import Todo from './pages/Todo';
 import NewDiary from './pages/NewDiary';
+import AnswerId from './pages/AnswerId';
+import ModifyPsw from './pages/ModifyPsw';
 function App() {
   return (
     <Router>
@@ -32,6 +34,8 @@ function App() {
         <Route path="/diary/:id/edit" element={<DiaryEdit />} />
         <Route path="/mypage/modify" element={<MyPageModify />} />
         <Route path="/todo" element={<Todo />} />
+        <Route path="/AnswerId" element={<AnswerId />} />
+        <Route path="/ModifyPsw" element={<ModifyPsw />} />
       </Routes>
     </Router>
   );
