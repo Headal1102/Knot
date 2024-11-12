@@ -258,7 +258,7 @@ function Todo() {
           <IoIosAddCircleOutline size={30} />
         </button>
         <button onClick={() => deleteSection(activeTab)} className="delete-section-btn">
-          삭제
+        <FaRegTrashAlt/>
         </button>
       </div>
 
