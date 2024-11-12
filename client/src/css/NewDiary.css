@@ -1,57 +1,74 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+#box{
+    display: grid;
+    grid-template-columns: 170px 1fr;
+}
 .NewDiary-Box {
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr 1fr 8fr 1fr;
+    gap: 1rem;
+    padding: 3rem 20rem;
+    text-align: center;
+}
+.Diary{
+    position: relative;
+    width: 100%;
     height: 100%;
-    margin-right: 100px;
 }
-
-.NewDiaryTitle {
-    margin-left: 100px;
-    margin-top: 50px;
-    height: 30px;
-    font-size: 18px;
-    font-weight: 800;
+.Diary *{
+    border-color: #2c2c2c;
+    border-radius: 1rem;
 }
-
+#diaryHead{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 6fr 1fr;
+    gap: 2rem;
+}
 .NewDiaryContent {
-    height: 80%;
-    margin-left: 100px;
-    margin-top: 10px;
+    width: 100%;
+    height: 100%;
     resize: none;
     overflow-y: scroll;
-    font-size: 16px;
 }
-
+select,input,textarea{
+    padding: 1rem;
+    font-size: 1.2rem;
+}
+input:hover,textarea:hover{
+    border: 3px #67dec2;
+}
 .NewDiaryBtnGroup {
     float: right;
     margin-left: auto;
 }
-
-.Btn-CancelDiary {  
-    width: 150px;
-    height: 40px;
-    margin-top: 5px;
-    border-radius: 5px;
-    background-color: #ff6969;
-    color: #ffffff;
+#buttonBox{
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
 }
-
-.Btn-CancelDiary:hover {
-    background-color: #aa1717;
+.Btn-CancelDiary {
+    width: 20%;
+    background-color: #2c2c2c;
     color: #ffffff;
 }
 
 .Btn-PostDiary {
-    width: 150px;
-    height: 40px;
-    margin-top: 5px;
-    margin-left: 5px;
-    border-radius: 5px;
+    width: 20%;
     background-color: #36e0b6;
     color: #ffffff;
 }
-
+.Btn-CancelDiary:hover {
+    background-color: #131313;
+    color:#36e0b6;
+}
 .Btn-PostDiary:hover {
-    background-color: #1e7b64;
-    color: #ffffff;
+    background-color: #3effcf;
+    color: #2c2c2c;
 }

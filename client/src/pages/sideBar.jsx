@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/sideBar.css';
-
 export default function SideBar({ today, user }) {
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
@@ -17,28 +16,26 @@ export default function SideBar({ today, user }) {
             if (!response.ok) {
                 throw new Error('데이터를 불러오지 못했습니다.');
             }
-            return response.text(); // 응답을 텍스트로 받기
+            return response.json();
         })
-        .then(text => {
-            const data = text ? JSON.parse(text) : {}; // 빈 응답을 빈 객체로 처리
+        .then(data => {
             console.log('데이터:', data);
             if (data) {
-                setUserName(data.userName || ''); // userName 설정
-                setUserImg(data.userImg || '');   // userImg 설정
-                setUserMsg(data.userMsg || '');
+                setUserName(data.userName);  // userName 설정
+                setUserImg(data.userImg);    // userImg 설정
+                setUserMsg(data.userMsg);
             }
         })
         .catch(error => console.error('세션 정보 가져오기 오류:', error));
-    }, [user]);
+    }, [user]); // user가 변경될 때마다 실행
 
     const logOut = () => {
         delete sessionStorage.userId;
         navigate('/');
     };
-    const myPageHandler = (path) => {
+    const myPageHandler= (path) => {
         navigate(path); 
-    };
-
+      };
     return (
         <div id="sideBar">
             <h1 id='logo' onClick={() => myPageHandler('/main')}>KNOT</h1>
@@ -50,4 +47,5 @@ export default function SideBar({ today, user }) {
             <h3 id='logout' onClick={logOut}>로그아웃</h3>
         </div>
     );
-};
+}
+

@@ -4,6 +4,7 @@
   box-sizing:border-box;
 }
 .myPage{
+  height: 100vh;
   display: grid;
   grid-template-columns: 170px 1fr;
 }
@@ -20,16 +21,14 @@
   width: 40%;
   min-width: 20rem;
   height: 100vh;
-  padding-top: 3rem;
+  padding-top: 1rem;
 }
 .profile-header {
   display: block;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   text-align: center;
   align-items: center;
-  margin-bottom: 20px;
 }
 .userImg{
   display: block;
@@ -45,11 +44,11 @@
   display: block;
   text-align: center;
   border:none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   background: none;
 }
 
-.edit-status-button, .update-button, .logout-button {
+.edit-status-button {
   background-color: #33c3b9;
   color: white;
   border: none;
@@ -64,7 +63,6 @@
   min-width: 10rem;
   max-width: 30rem;
   margin: auto;
-  padding: 20px;
   border-radius: 5px;
 }
 
@@ -80,4 +78,21 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
 } 
-
+.logout-button,.update-button{
+  background: #33c3b9;
+  color: white;
+  padding: 1rem 0;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+.logout-button{
+  background-color: #2c2c2c;
+}
+.update-button:hover{
+  color:#2c2c2c;
+  background: #65dbd3;
+}
+.logout-button:hover{
+  color: #33c3b9;
+  background-color:rgb(12, 12, 12);
+}

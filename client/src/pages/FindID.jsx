@@ -9,7 +9,7 @@ function FindID() {
   const handleTextClick = () => {
     navigate('/Login'); 
   };
-
+  const [userId, setuserId] = useState('');
   const [userEmail, setuserEmail] = useState('');
   const [emailCode, setEmailCode]=useState('');
   const [verificationCode, setVerificationCode] = useState(''); // 인증코드 상태
@@ -31,28 +31,30 @@ function FindID() {
     });
     
   };
-  const handleEmailVerification = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({userEmail}),
-      });
-
-      if (response.ok) {
-        const data= await response.json();
-        setVerificationCode(data.randomCd);
-        alert('이메일 인증 요청이 전송되었습니다. 받은 인증 코드를 입력하세요.');
-      } else {
-        alert('이메일 인증 요청에 실패했습니다.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('네트워크 오류가 발생했습니다.');
-    }
-  };
+  // const userData = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:8080/api/userData/${user}`, {
+  //       method: 'GET',
+  //     })
+  //     .then(response=>{
+  //       if (!response.ok) {
+  //         throw new Error('데이터를 불러오지 못했습니다.');
+  //       }
+  //       return response.json();
+  //     })
+  //      .then(data => {
+  //           console.log('데이터:', data);
+  //           if (data) {
+  //             setuserEmail(data.userEmail);
+  //             setuserId(data.userId);
+  //           }
+  //       })
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     alert('네트워크 오류가 발생했습니다.');
+  //   }
+  //   //AnswerId.jsx에 userId와 userEmail 데이터 보내지
+  // };
 
   return (
     <div className="login-container">
@@ -66,7 +68,8 @@ function FindID() {
             onChange={(e) => setuserEmail(e.target.value)}
             required
           />
-           <button className='emailVer' type="button" onClick={handleEmailVerification}>이메일 인증</button>
+          {/* onClick={handleEmailVerification} */}
+           <button className='emailVer' type="button" >이메일 인증</button>
         </div>
         <div className="input-jf">
           <input name='EmailCd' className='input-join'

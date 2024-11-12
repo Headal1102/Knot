@@ -18,14 +18,12 @@ router.get(`/:userId`,(req,res)=>{
     connection.execute(query, [userId], (err, results) => {
         if (err) {
         console.error('쿼리 실행 오류: ', err);
-        return res.status(500).json({ error: '서버 오류' });
-    }
-    /*if (results.length > 0) {
-        res.json(results[0]); // 결과가 있을 경우 첫 번째 레코드를 JSON으로 반환
-    } */
-    else {
-        res.json({}); // 결과가 없을 경우 빈 JSON 객체 반환
-    }
+        res.status(500).send('서버 오류');
+        return;
+    }else{
+        res.json(results[0]);
+        // res.status(200).send('ok');
+    }; // 연결 종료
     connection.end()
 });
     //유저데이터 리턴...
