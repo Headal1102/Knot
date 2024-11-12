@@ -39,8 +39,7 @@ let localStorage=window.localStorage;
       sessionStorage.setItem("userId",id);
       navigate('/main'); // 성공 시 홈으로 이동
     } else {
-      const errorData = await response.json();
-      setErrorMessage(errorData.message || '로그인 실패'); // 실패 시 오류 메시지 설정
+      alert('아이디나 비밀번호가 틀렸습니다.');
     }
   };
 
