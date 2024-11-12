@@ -223,8 +223,8 @@ function Todo() {
 
   return (
     <div className="app-container">
+       <h2 id='todolistHead'>Todo-List</h2>
       <div className="tab-container">
-        <h2>To-Do</h2>
         {sections.length > tabsToShow && (
           <button onClick={() => setTabIndex(tabIndex - 1)} disabled={tabIndex === 0} className="arrow-btn">◀</button>
         )}

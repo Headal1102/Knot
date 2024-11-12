@@ -36,6 +36,9 @@ app.use(session({
     }
 }));
 
+// React 빌드된 파일을 서빙
+app.use(express.static(path.join(__dirname, 'client/build')));
+
 const loginRouter=require('./routes/login');
 const signupRouter=require('./routes/signup');
 const mypageRouter=require('./routes/mypage');
