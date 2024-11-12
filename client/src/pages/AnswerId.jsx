@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Session from 'react-session-api';
+import '../css/AnswerId.css'
 export default function AnswerId(){
     const navigate = useNavigate();
+    const navtoIndex=()=>{
+        navigate("/");
+      }
     const userId=sessionStorage.getItem("userId");
     const destroy = () => {
         sessionStorage.removeItem("userId"); // Use removeItem to delete userId
     };
     return(
         <div id='AnswerCon'>
-            <h1 id='logo'>KNOT</h1>
+            <h1 id='logo' onClick={() => navtoIndex('/')}>KNOT</h1>
             <div id='AnswerId'>
-                <h1>아이디</h1>
+                <h2>아이디</h2>
                 <h1>{userId}</h1>
             </div>
             <div id='links'>
