@@ -59,22 +59,16 @@ router.post('/psw',async(req,res)=>{
 router.put('/psw/modify',async(req,res)=>{
     let userId=req.body.userId;
     let userEmail=req.body.userEmail;
-    const newUserPsw=await bcrypt.hash(req.body.newUserPsw,10);
+    const salt = await bcrypt.genSalt(10);
+    const newUserPsw=await bcrypt.hash(req.body.userPsw,salt);
 
     const query=`update user set userPsw=? where userId=? and userEmail=?;`;
-    connection.execute(query, [newUserPsw,userId, userEmail], (err, results) => {
+    connection.execute(query, [newUserPsw, userId, userEmail], (err, results) => {
         if (err) {
-        console.error('쿼리 실행 오류: ', err);
-        res.status(500).send('서버 오류');
-        return;
+        return res.status(500).send('서버 오류');
     }else{
-        console.log('성공');
-        // res.status(200).send('ok');
-
-        // console.log('회원 ID');
-        // console.log(`id: ${userId}`);
-        // res.status(201).json({ message: '회원가입 성공!' });
-    }; // 연결 종료
+        return res.status(200).send('ok');
+    };
     connection.end()
 });
 });
