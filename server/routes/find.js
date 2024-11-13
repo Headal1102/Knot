@@ -65,10 +65,15 @@ router.put('/psw/modify',async(req,res)=>{
     const query=`update user set userPsw=? where userId=? and userEmail=?;`;
     connection.execute(query, [newUserPsw, userId, userEmail], (err, results) => {
         if (err) {
-        return res.status(500).send('서버 오류');
-    }else{
-        return res.status(200).send('ok');
-    };
+            if (!res.headersSent) {
+                return res.status(500).send('서버 오류');
+            }
+        } else {
+            if (!res.headersSent) {
+                return res.status(200).send('ok');
+            }
+        }
+        
     connection.end()
 });
 });

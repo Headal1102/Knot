@@ -63,6 +63,9 @@ function FindFW() {
     });
     if (response.ok) {
       alert('성공');
+      
+      sessionStorage.setItem('userId',userId);
+      sessionStorage.setItem('userEmail',userEmail);
       navigate('/ModifyPsw')
     }
   };
