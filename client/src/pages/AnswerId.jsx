@@ -13,7 +13,7 @@ export default function AnswerId(){
     };
     return(
         <div id='AnswerCon'>
-            <h1 id='logo' onClick={() => navtoIndex('/')}>KNOT</h1>
+            <h1 id='Answerlogo' onClick={() => navtoIndex('/')}>KNOT</h1>
             <div id='AnswerId'>
                 <h2>아이디</h2>
                 <h1>{userId}</h1>
