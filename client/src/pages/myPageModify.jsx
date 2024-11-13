@@ -86,20 +86,8 @@ export default function MyPageModify() {
           <div className='profile-header'>
             <h1 className='profile'>정보 수정</h1>
             <img className='userImg' src={userInfo.userImg} alt='없음' />
-            <input
-              type='text'
-              value={userInfo.userName}
-              className='userName'
-              name='userName'
-              onChange={handleChange}
-            />
-            <input
-              type='text'
-              value={userInfo.userMsg}
-              className='userMsg'
-              name='userMsg'
-              onChange={handleChange}
-            />
+            <input type='text' value={userInfo.userName} className='userName' name='userName' onChange={handleChange}/>
+            <input type='text' value={userInfo.userMsg} className='userMsg' name='userMsg' onChange={handleChange} />
           </div>
           <div className='profile-form'>
             <label>
