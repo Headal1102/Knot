@@ -71,12 +71,12 @@ let localStorage=window.localStorage;
           />
         </div>
         <div className="remember-and-find">
-          <div className="checkbox-group">
+          {/* <div className="checkbox-group">
             <label>
               <input type="checkbox" name='check' />
-              아이디 기억하기
+              <span>아이디 기억하기</span>
             </label>
-          </div>
+          </div> */}
           <div className="find_idfw-container">
             <span className='find_idfw' onClick={() => handleNavigate('/FindID')}>아이디</span>
             <span className='find_idfw' onClick={() => handleNavigate('/FindPw')}>/비밀번호 찾기</span>

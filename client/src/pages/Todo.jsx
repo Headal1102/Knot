@@ -144,14 +144,14 @@ function Todo() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ todosection: sectionId, userId }),
-      credentials: 'include'
+      credentials: 'include',
     });
-
+  
     if (response.ok) {
       setSections(sections.filter((section) => section.TodoCg !== sectionId));
       if (activeTab === sectionId) setActiveTab(null);
     }
-  };
+  };  
 
   const deleteTodo = async (todoId) => {
     const response = await fetch('http://localhost:8080/api/todo/deleteTodo', {
@@ -221,9 +221,36 @@ function Todo() {
     setEditContent(prev => ({ ...prev, [todoId]: value }));
   };
 
+  const toggleTodoCgIndex = async (sectionId) => {
+    const updatedSections = sections.map(section =>
+      section.TodoCg === sectionId
+        ? { ...section, TodoCgIndex: section.TodoCgIndex === 'y' ? 'n' : 'y' }
+        : section
+    );
+    setSections(updatedSections);
+
+    try {
+      const response = await fetch('http://localhost:8080/api/todo/updateTodoCgIndex', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sectionId,
+          TodoCgIndex: updatedSections.find((s) => s.TodoCg === sectionId).TodoCgIndex,
+          userId
+        }),
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        console.error('서버에서 TodoCgIndex 업데이트 실패');
+      }
+    } catch (error) {
+      console.error('서버와의 통신 오류:', error);
+    }
+  };
+
   return (
     <div className="app-container">
-       <h2 id='todolistHead'>Todo-List</h2>
+      <h2 id='todolistHead'>Todo-List</h2>
       <div className="tab-container">
         {sections.length > tabsToShow && (
           <button onClick={() => setTabIndex(tabIndex - 1)} disabled={tabIndex === 0} className="arrow-btn">◀</button>
@@ -241,13 +268,19 @@ function Todo() {
                 onBlur={() => saveSectionEdit(section.TodoCg)}
               />
             ) : (
-              <button
-                className={`tab ${activeTab === section.TodoCg ? 'active-tab' : ''}`}
-                onClick={() => setActiveTab(section.TodoCg)}
-                onDoubleClick={() => setEditingSectionId(section.TodoCg)}
-              >
-                {section.TodoCg}
-              </button>
+              <div id="Todoindex">
+                <button
+                  className={`tab ${activeTab === section.TodoCg ? 'active-tab' : ''}`}
+                  onClick={() => setActiveTab(section.TodoCg)}
+                  onDoubleClick={() => setEditingSectionId(section.TodoCg)}
+                >
+                  {section.TodoCg}
+                  <button onClick={() => toggleTodoCgIndex(section.TodoCg)} className="star-icon-btn">
+                  {section.TodoCgIndex === 'y' ? '⭐' : '☆'}
+                </button>
+                </button>
+                
+              </div>
             )}
           </div>
         ))}
@@ -258,7 +291,7 @@ function Todo() {
           <IoIosAddCircleOutline size={30} />
         </button>
         <button onClick={() => deleteSection(activeTab)} className="delete-section-btn">
-        <FaRegTrashAlt/>
+          삭제
         </button>
       </div>
 
@@ -269,43 +302,43 @@ function Todo() {
           </div>
         ) : (
           <div className="todo-list">
-            {todos.filter(todo => todo.todoCg === activeTab).map((todo) => (
-              <div key={todo.todoText} className="todo-item">
-                <input
-                  type="checkbox"
-                  checked={todo.todoCheck === 'y'}
-                  onChange={() => toggleCompleted(todo.todoText)}
-                  style={{ marginRight: '10px' }}
-                />
-                {todo.editing ? (
-                  <input
-                    type="text"
-                    value={editContent[todo.todoText]}
-                    onChange={(e) => handleEditContentChange(todo.todoText, e)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        editTodo(todo.todoText, editContent[todo.todoText]);
-                      }
-                    }}
-                    onBlur={() => editTodo(todo.todoText, editContent[todo.todoText])}
-                    style={{ flexGrow: 1 }}
-                  />
-                ) : (
-                  <span>{todo.todoText}</span>
-                )}
-                <div style={{ marginLeft: 'auto', display: 'flex', gap: '5px' }}>
-                  <button onClick={() => startEditingTodo(todo.todoText, todo.todoText)} className="icon-btn">
-                    <LuPencil size={20} />
-                  </button>
-                  <button onClick={() => deleteTodo(todo.todoText)} className="icon-btn">
-                    <FaRegTrashAlt size={20} />
-                  </button>
-                </div>
-              </div>
-            ))}
+            {todos
+              .filter(todo => todo.todoCg === activeTab)
+              .sort((a, b) => (a.todoCheck === 'y' ? 1 : -1)) // 완료된 항목을 하단으로 정렬
+              .map((todo) => {
+                const formatDate = (dateStr) => {
+                  const date = new Date(dateStr);
+                  const year = date.getFullYear();
+                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                  const day = String(date.getDate()).padStart(2, '0');
+                  return `${year}-${month}-${day}`;
+                };
+
+                return (
+                  <div key={todo.todoText} className={`todo-item ${todo.todoCheck === 'n' ? 'not-completed' : 'completed'}`}>
+                    <input
+                      type="checkbox"
+                      checked={todo.todoCheck === 'y'}
+                      onChange={() => toggleCompleted(todo.todoText)}
+                      style={{ marginRight: '10px' }}
+                    />
+                    <span>{todo.todoText}</span>
+                    <span className="todo-date">{formatDate(todo.todoDate)}</span>
+                    <div style={{ marginLeft: 'auto', display: 'flex', gap: '5px' }}>
+                      <button onClick={() => startEditingTodo(todo.todoText, todo.todoText)} className="icon-btn">
+                        <LuPencil size={20} />
+                      </button>
+                      <button onClick={() => deleteTodo(todo.todoText)} className="icon-btn">
+                        <FaRegTrashAlt size={20} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>
+
       <button onClick={addTodo} className="add-todo-btn">
         투두리스트 추가
       </button>
