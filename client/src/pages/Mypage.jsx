@@ -34,7 +34,8 @@ export default function MyPage(){
                 setUserMsg(data.userMsg);
                 setuserEmail(data.userEmail);
                 setuserGender(data.userGender);
-                setuserBirth(data.userBirth);
+                const localDate = new Date(new Date(data.userBirth).getTime() + (9 * 60 * 60 * 1000));
+                setuserBirth(localDate.toISOString().split('T')[0]); // YYYY-MM-DD 형식으로 설정
             }
         })
         .catch(error => console.error('세션 정보 가져오기 오류:', error));
