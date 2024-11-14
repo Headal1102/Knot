@@ -18,6 +18,7 @@ import Todo from './pages/Todo';
 import NewDiary from './pages/NewDiary';
 import AnswerId from './pages/AnswerId';
 import ModifyPsw from './pages/ModifyPsw';
+import OpenDiary from './pages/OpenDiary';
 function App() {
   return (
     <Router>
@@ -36,6 +37,7 @@ function App() {
         <Route path="/todo" element={<Todo />} />
         <Route path="/AnswerId" element={<AnswerId />} />
         <Route path="/ModifyPsw" element={<ModifyPsw />} />
+        <Route path="/OpenDiary/:DiaryCd" element={<OpenDiary />} />
       </Routes>
     </Router>
   );
