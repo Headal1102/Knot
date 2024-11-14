@@ -55,7 +55,7 @@ router.put('/modify',(req,res)=>{
         })
 
         const query = 'update user set userName=?,userMsg=?,userBirth=?,userGender=? where userId=?;';
-        connection.query(query, [userName,userMsg,userBirth.substring(0, 11),userGender, userId],(err, results) => {
+        connection.query(query, [userName,userMsg,userBirth.substring(0, 10),userGender, userId],(err, results) => {
             if (err) {
                 console.error('쿼리 실행 실패:', err);
                 res.status(500).json({ error: 'Query execution failed' });
