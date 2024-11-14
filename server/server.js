@@ -47,9 +47,6 @@ const FindIdPswRouter=require('./routes/find');
 const userDataRouter=require('./routes/userData');
 const todoRouter=require('./routes/todo');
 const diaryRoutes = require('./routes/diaryRoutes');
-// const { request } = require('http');
-
-
 
 //api 라우터
 app.use('/api/login',loginRouter);
