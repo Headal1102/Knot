@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const diaryController = require('../controllers/diaryController');
 require('dotenv').config();
 const mysql = require('mysql2');
 // 다이어리 생성
@@ -55,7 +54,6 @@ router.post(`/delete`,(req,res)=>{
     //유저데이터 리턴...
 });
 // 모든 다이어리 조회
-// router.get('/', diaryController.getAllDiaries);
 router.get(`/:userId`,(req,res)=>{
     const userId=req.params.userId;
     const connection = mysql.createConnection({
