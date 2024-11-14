@@ -6,7 +6,6 @@
 #Menu-Title {
     font-size: 24px;
     margin: 0px;
-    margin-top: 10px;
     margin-left: 10px;
 }
 
@@ -14,22 +13,6 @@
     height: 100vh;
     width: 100%;
 }
-
-/* .Split-Row {
-    height: 100%;
-    width: auto;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-} */
-
-/* .Split-Column {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-} */
 
 .Calendar-Box {
     height: 50%;
@@ -41,6 +24,14 @@
     height: 50%;
     width: 100%;
     background-color: #99ff99;
+}
+#DiaryTitles{
+    position: relative;
+    padding-right: 0.5rem;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    text-align:center;
 }
 
 .DiaryList-Box {
@@ -56,35 +47,39 @@
     margin: 5px;
     display: flex;
     /* background-color: #ffffff; */
-    border-top: 5px solid #2c2c2c;
+    border-top: 6px solid #2c2c2c;
     align-content: center;
 }
 
 .Diary-NewDateForm {
-    height: 40px;
-    margin: 0;
-    align-content: center;
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    gap: 1rem;
+    align-items: center;
 }
-
+.Diary-NewDateForm input{
+    height: 1rem;
+}
+.Diary-NewDateForm .icon{
+    font-size: 2rem;
+    cursor: pointer;
+    margin: auto;
+}
 .Btn-NewDiary {
-    height: 30px;
+    position: relative;
     width: 30px;
-    margin: 0;
-    padding: 0;
-    align-self: center;
-    background-image: url(../assets/icon_add.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: #00000000;
-    border-color: #00000000;
+    align-items: center;
 }
 
 .DiaryLists-Box {
-    /* height: 100%; */
+    height: 85vh;
     width: auto;
     margin: 5px;
+    overflow-y: scroll;
     /* background-color: #ffffff; */
-    border-top: 5px solid #2c2c2c;
+    border-top: 6px solid #2c2c2c;
 }
 
 .DiaryLists {
@@ -93,7 +88,6 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    overflow-y: scroll;
 }
 
 .DiaryList-Card {

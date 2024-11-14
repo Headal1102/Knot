@@ -13,6 +13,9 @@
 .Calendar-Box {
     height: 100%;
 } */
+ body{
+  overflow: hidden;
+ }
 .calendar-container {
   position: relative;
   width: 100%;
@@ -92,4 +95,8 @@ button:hover {
   border-radius: unset;
   background-color:#90ffe3;
   color:black;
+}
+.day.has-todo {
+  text-decoration: underline;
+  font-weight: bold;
 }
