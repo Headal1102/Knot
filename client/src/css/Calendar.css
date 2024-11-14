@@ -78,3 +78,7 @@ button:hover {
   background-color:#90ffe3;
   color:black;
 }
+.day.has-todo {
+  text-decoration: underline;
+  font-weight: bold;
+}
