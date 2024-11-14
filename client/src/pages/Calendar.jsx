@@ -1,35 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/Calendar.css';
+import Todo from './Todo';
 
-export default function Calendar(){
+export default function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
+  const [formattedDate, setFormattedDate] = useState('');
 
   const koreaTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
-  const today = koreaTime.getDate();
-  const currentKoreanMonth = koreaTime.getMonth();
-  const currentKoreanYear = koreaTime.getFullYear();
+  const today = koreaTime.getDate(); //현재 일
+  const currentKoreanMonth = koreaTime.getMonth();//현재 달
+  const currentKoreanYear = koreaTime.getFullYear();// 현재 년도
+  
 
-  const daysInMonth = (month, year) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
+  useEffect(() => {
+    if (!formattedDate) {
+      const todayFormatted = `${currentKoreanYear}-${String(currentKoreanMonth + 1).padStart(2, '0')}-${String(today).padStart(2, '0')}`;
+      setFormattedDate(todayFormatted);
+    }
+  }, [currentKoreanYear, currentKoreanMonth, today, formattedDate]);
 
-  const firstDayOfMonth = (month, year) => {
-    return new Date(year, month, 1).getDay();
-  };
-
+  const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+  const firstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
+//이전달로 넘어가기
   const handlePrevMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-    setSelectedDay(null); 
+    setSelectedDay(null);
+    setFormattedDate('');
   };
-
+//다음달로 넘어가기
   const handleNextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-    setSelectedDay(null); 
+    setSelectedDay(null);
+    setFormattedDate('');
   };
-
+//선택한 날짜를 selectedDay값에 넣음
   const handleDayClick = (day) => {
     setSelectedDay(day);
+    const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    const formatted = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    setFormattedDate(formatted);
   };
 
   const renderDays = () => {
@@ -42,10 +52,7 @@ export default function Calendar(){
     }
 
     for (let day = 1; day <= totalDays; day++) {
-      const isToday =
-        day === today &&
-        currentMonth.getMonth() === currentKoreanMonth &&
-        currentMonth.getFullYear() === currentKoreanYear;
+      const isToday = day === today && currentMonth.getMonth() === currentKoreanMonth && currentMonth.getFullYear() === currentKoreanYear;
       const isSelected = day === selectedDay;
 
       days.push(
@@ -80,6 +87,9 @@ export default function Calendar(){
         </div>
         <div className="days-grid">{renderDays()}</div>
       </div>
+      {formattedDate && (
+        <Todo selectedDate={formattedDate} />
+      )}
     </div>
   );
 };

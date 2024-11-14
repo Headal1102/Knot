@@ -40,7 +40,7 @@ export default function SideBar({ today, user }) {
         <div id="sideBar">
             <h1 id='logo' onClick={() => myPageHandler('/main')}>KNOT</h1>
             <div id="userProfile">
-                <img id="userImg" src={userImg} alt="유저사진" onClick={() => myPageHandler('/mypage')} />
+                <img id="userImg" src={userImg} alt="" onClick={() => myPageHandler('/mypage')} />
                 <h3 id="userName" onClick={() => myPageHandler('/mypage')}>{userName}</h3>
                 <h2 id='userMsg' onClick={() => myPageHandler('/mypage')}>{userMsg}</h2>
             </div>

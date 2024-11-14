@@ -87,7 +87,7 @@ export default function MyPage(){
                 <div className='myPageMain'>
                     <div className="profile-header">
                         <h1 className='profile'>프로필</h1>
-                        <img className='userImg' src={userImg} alt="없음" />
+                        <img className='userImg' src={userImg} alt="" />
                         <input type="text" value={userName} className="userName" name="userName" disabled />
                         <input type="text" value={userMsg} className="userMsg" disabled/>
                         {/* <button className="edit-status-button">수정하기</button> */}
