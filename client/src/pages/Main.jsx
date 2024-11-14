@@ -34,7 +34,6 @@ export default function Main(){
             <SideBar className='SideBar section' user={userId}></SideBar>
             <div id='first' className='knot'>
             <Calendar id='Calendar' today={today} user={userId} className='Calendar section'></Calendar>
-            <Todo id='Todo' today={today} user={userId} className='TodoList section'></Todo>
             </div>
             <div id='second' className='knot'>
                 <Diary id='Diary' today={today} user={userId} className='Diary section'></Diary>

@@ -4,9 +4,8 @@ import { IoIosAddCircleOutline } from 'react-icons/io';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { LuPencil } from 'react-icons/lu';
 
-function Todo() {
+function Todo({ selectedDate }) {
   const userId = sessionStorage.getItem('userId'); // sessionStorage에서 userId 가져오기
-
   const [sections, setSections] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [editingSectionId, setEditingSectionId] = useState(null);
@@ -15,45 +14,51 @@ function Todo() {
   const tabsToShow = 3;
   const [todos, setTodos] = useState([]);
   const [editContent, setEditContent] = useState({});
-  const [editDate, setEditDate] = useState('');
+
+  // 선택된 날짜가 없으면 오늘 날짜로 기본 설정
+  const today = new Date();
+  const defaultDate = selectedDate || today.toISOString().split('T')[0];
+
+  const fetchData = async (date) => {
+    try {
+      const targetDate = date || defaultDate;
+      console.log(`Fetching todos for date: ${targetDate}`);
+      const sectionsResponse = await fetch('http://localhost:8080/api/todo/sections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+        credentials: 'include',
+      });
+      const todosResponse = await fetch('http://localhost:8080/api/todo/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, todoDate: targetDate }),
+        credentials: 'include',
+      });
+
+      if (!sectionsResponse.ok) throw new Error('섹션 데이터 불러오기 실패');
+      if (!todosResponse.ok) throw new Error('할 일 데이터 불러오기 실패');
+
+      const sectionsData = await sectionsResponse.json();
+      const todosData = await todosResponse.json();
+
+      setSections(sectionsData);
+      setTodos(todosData);
+
+      if (sectionsData.length > 0) {
+        setActiveTab(sectionsData[0].TodoCg);
+      } else {
+        setActiveTab(null);
+      }
+      console.log(`Todos for date ${targetDate}:`, todosData);
+    } catch (error) {
+      console.error('데이터 로딩 중 오류:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const sectionsResponse = await fetch('http://localhost:8080/api/todo/sections', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId }), // userId 포함
-          credentials: 'include',
-        });
-        const todosResponse = await fetch('http://localhost:8080/api/todo/todos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId }), // userId 포함
-          credentials: 'include',
-        });
-
-        if (!sectionsResponse.ok) throw new Error('섹션 데이터 불러오기 실패');
-        if (!todosResponse.ok) throw new Error('할 일 데이터 불러오기 실패');
-
-        const sectionsData = await sectionsResponse.json();
-        const todosData = await todosResponse.json();
-
-        setSections(sectionsData);
-        setTodos(todosData);
-
-        if (sectionsData.length > 0) {
-          setActiveTab(sectionsData[0].TodoCg);
-        } else {
-          setActiveTab(null);
-        }
-      } catch (error) {
-        console.error('데이터 로딩 중 오류:', error);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
+    fetchData(selectedDate);
+  }, [userId, selectedDate]);
 
   const addSection = async () => {
     let newSectionNumber = 1;
@@ -91,22 +96,30 @@ function Todo() {
       return;
     }
 
-    const currentSectionTodos = todos.filter(todo => todo.todoCg === activeTab);
-    const newTodoNumber = currentSectionTodos.length + 1;
-    const newTodoText = `내용 ${newTodoNumber}`;
+    const newTodoText = `새 할 일`;
+    const newTodo = { todoText: newTodoText, todoCg: activeTab, userId, todoDate: defaultDate };
 
-    const newTodo = { todoText: newTodoText, todoCg: activeTab, userId };
+    try {
+      const response = await fetch('http://localhost:8080/api/todo/addTodo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTodo),
+        credentials: 'include',
+      });
 
-    const response = await fetch('http://localhost:8080/api/todo/addTodo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newTodo),
-      credentials: 'include',
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      setTodos([...todos, data.newTodo]);
+      if (response.ok) {
+        const result = await response.json();
+        if (result.todos) {
+          console.log(`할 일 목록 업데이트됨:`, result.todos);
+          setTodos(result.todos); // 새로 추가된 할 일을 포함한 목록으로 업데이트
+        } else {
+          await fetchData(selectedDate); // 선택된 날짜의 새 목록을 불러옴
+        }
+      } else {
+        console.error('할 일 추가 중 오류 발생');
+      }
+    } catch (error) {
+      console.error('할 일 추가 요청 중 오류:', error);
     }
   };
 
@@ -146,12 +159,12 @@ function Todo() {
       body: JSON.stringify({ todosection: sectionId, userId }),
       credentials: 'include',
     });
-  
+
     if (response.ok) {
       setSections(sections.filter((section) => section.TodoCg !== sectionId));
       if (activeTab === sectionId) setActiveTab(null);
     }
-  };  
+  };
 
   const deleteTodo = async (todoId) => {
     const response = await fetch('http://localhost:8080/api/todo/deleteTodo', {
@@ -162,7 +175,8 @@ function Todo() {
     });
 
     if (response.ok) {
-      setTodos(todos.filter((todo) => todo.todoText !== todoId));
+      await fetchData(selectedDate); // 선택된 날짜의 최신 할 일 목록 가져오기
+      console.log(`Deleted todo with id ${todoId} for date ${selectedDate}`);
     }
   };
 
@@ -250,7 +264,7 @@ function Todo() {
 
   return (
     <div className="app-container">
-      <h2 id='todolistHead'>Todo-List</h2>
+      <h2 id="todolistHead">Todo-List</h2>
       <div className="tab-container">
         {sections.length > tabsToShow && (
           <button onClick={() => setTabIndex(tabIndex - 1)} disabled={tabIndex === 0} className="arrow-btn">◀</button>
@@ -275,9 +289,9 @@ function Todo() {
                   onDoubleClick={() => setEditingSectionId(section.TodoCg)}
                 >
                   {section.TodoCg}
-                </button>
-                <button onClick={() => toggleTodoCgIndex(section.TodoCg)} className="star-icon-btn">
-                  {section.TodoCgIndex === 'y' ? '⭐' : '☆'}
+                  <span onClick={() => toggleTodoCgIndex(section.TodoCg)} className="star-icon-btn">
+                    {section.TodoCgIndex === 'y' ? '⭐' : '☆'}
+                  </span>
                 </button>
               </div>
             )}
@@ -293,17 +307,17 @@ function Todo() {
           삭제
         </button>
       </div>
-
+  
       <div className="todo-container">
-        {todos.filter(todo => todo.todoCg === activeTab).length === 0 ? (
+        {todos.filter(todo => todo.todoCg === activeTab && todo.todoDate === defaultDate).length === 0 ? (
           <div className="empty-todo-message">
             <span>아이콘 이미지를 눌러서 투두리스트를 작성해보세요!</span>
           </div>
         ) : (
           <div className="todo-list">
             {todos
-              .filter(todo => todo.todoCg === activeTab)
-              .sort((a, b) => (a.todoCheck === 'y' ? 1 : -1)) // 완료된 항목을 하단으로 정렬
+              .filter(todo => todo.todoCg === activeTab && todo.todoDate === defaultDate)
+              .sort((a, b) => (a.todoCheck === 'y' ? 1 : -1))
               .map((todo) => {
                 const formatDate = (dateStr) => {
                   const date = new Date(dateStr);
@@ -312,7 +326,7 @@ function Todo() {
                   const day = String(date.getDate()).padStart(2, '0');
                   return `${year}-${month}-${day}`;
                 };
-
+  
                 return (
                   <div key={todo.todoText} className={`todo-item ${todo.todoCheck === 'n' ? 'not-completed' : 'completed'}`}>
                     <input
@@ -337,12 +351,12 @@ function Todo() {
           </div>
         )}
       </div>
-
+  
       <button onClick={addTodo} className="add-todo-btn">
         투두리스트 추가
       </button>
     </div>
   );
-}
+}  
 
 export default Todo;

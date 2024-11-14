@@ -23,7 +23,7 @@ connection.connect((err) => {
 
 // 섹션 조회
 router.post('/sections', (req, res) => {
-  const { userId } = req.body;
+  const { userId, } = req.body;
   if (!userId) {
     return res.status(400).json({ error: '세션에 사용자 정보가 없습니다.' });
   }
@@ -93,36 +93,75 @@ router.post('/changeSection', (req, res) => {
 
 // 할 일 조회
 router.post('/todos', (req, res) => {
-  const { userId } = req.body;
-  const query = 'SELECT userId, todoText, todoCheck, todoDate, todoCg FROM Todo WHERE userId = ? AND todoText IS NOT NULL';
-  connection.execute(query, [userId], (err, results) => {
+  const { userId, todoDate } = req.body;
+  console.log(`Fetching todos for userId: ${userId}, date: ${todoDate}`);
+  
+  const query = `
+    SELECT userId, todoText, todoCheck, DATE_FORMAT(todoDate, "%Y-%m-%d") as todoDate, todoCg 
+    FROM Todo 
+    WHERE userId = ? AND DATE_FORMAT(todoDate, "%Y-%m-%d") = ? AND todoText IS NOT NULL
+  `;
+  connection.execute(query, [userId, todoDate], (err, results) => {
     if (err) {
       console.error('할 일 조회 오류:', err);
       return res.status(500).send('서버 오류');
     }
+    console.log(`Todos fetched for date ${todoDate}:`, results);
     res.json(results);
   });
 });
 
-// 할 일 생성
-router.post('/addTodo', (req, res) => {
-  const { todoText, todoCg, userId } = req.body;
-  const todoDate = new Date().toISOString().split('T')[0];
-  const todoCheck = 'n';
 
-  if (!todoText || !todoCg) {
-    return res.status(400).json({ message: '모든 필드를 입력하세요. todoText와 todoCg가 필요합니다.' });
+// 할 일 생성 후 조회
+router.post('/addTodo', (req, res) => {
+  const { todoText, todoCg, userId, todoDate } = req.body;
+  console.log(`Adding todo for userId: ${userId}, date: ${todoDate}`);
+  const dateToInsert = todoDate || new Date().toISOString().split('T')[0];
+
+  if (!todoText || !todoCg || !userId) {
+    return res.status(400).json({ message: '모든 필드를 입력하세요. todoText와 todoCg, userId가 필요합니다.' });
   }
 
-  const query = 'INSERT INTO Todo (todoText, todoCheck, todoDate, userId, todoCg) VALUES (?, ?, ?, ?, ?)';
-  connection.execute(query, [todoText, todoCheck, todoDate, userId, todoCg], (err) => {
+  // 현재 section의 TodoCgIndex 값 조회
+  const checkSectionIndexQuery = 'SELECT TodoCgIndex FROM Todo WHERE TodoCg = ? AND userId = ? LIMIT 1';
+  connection.execute(checkSectionIndexQuery, [todoCg, userId], (err, results) => {
     if (err) {
-      console.error('할 일 생성 오류:', err);
+      console.error('섹션 인덱스 조회 오류:', err);
       return res.status(500).json({ message: '서버 오류 발생' });
     }
-    res.json({ message: '할일이 성공적으로 생성되었습니다.', newTodo: { todoText, todoCg, userId } });
+
+    // section의 TodoCgIndex가 'y'이면 새 할 일의 TodoCgIndex도 'y'로 설정
+    const todoCgIndex = results.length > 0 && results[0].TodoCgIndex === 'y' ? 'y' : 'n';
+
+    // 새로운 할 일 생성 쿼리
+    const insertTodoQuery = 'INSERT INTO Todo (todoText, todoCheck, todoDate, userId, todoCg, TodoCgIndex) VALUES (?, ?, ?, ?, ?, ?)';
+    connection.execute(insertTodoQuery, [todoText, 'n', dateToInsert, userId, todoCg, todoCgIndex], (insertErr) => {
+      if (insertErr) {
+        console.error('할 일 생성 오류:', insertErr);
+        return res.status(500).json({ message: '서버 오류 발생' });
+      }
+      console.log(`Todo added for date ${dateToInsert}: ${todoText} with TodoCgIndex: ${todoCgIndex}`);
+
+      // 새로 생성한 할 일이 포함된 목록을 조회하여 반환
+      const fetchTodosQuery = 'SELECT userId, todoText, todoCheck, todoDate, todoCg, TodoCgIndex FROM Todo WHERE userId = ? AND DATE_FORMAT(todoDate, "%Y-%m-%d") = ? AND todoText IS NOT NULL';
+      connection.execute(fetchTodosQuery, [userId, dateToInsert], (fetchErr, results) => {
+        if (fetchErr) {
+          console.error('할 일 조회 오류:', fetchErr);
+          return res.status(500).json({ message: '할 일 목록 조회 오류 발생' });
+        }
+        console.log(`Todos fetched after adding for date ${dateToInsert}:`, results);
+        res.json({
+          message: '할일이 성공적으로 생성되었으며, 목록이 조회되었습니다.',
+          todos: results // 생성 후 조회된 할 일 목록 반환
+        });
+      });
+    });
   });
 });
+
+
+
+
 
 // 할 일 수정
 router.post('/editTodo', (req, res) => {
@@ -145,19 +184,17 @@ router.post('/editTodo', (req, res) => {
 // 할 일 삭제
 router.post('/deleteTodo', (req, res) => {
   const { todoText, todoCg, userId } = req.body;
+  console.log(`Deleting todo for userId: ${userId}, todoText: ${todoText}`);
 
-  if (todoText && todoCg && userId) {
-    const deleteQuery = 'DELETE FROM Todo WHERE todoText = ? AND TodoCg = ? AND userId = ?';
-    connection.execute(deleteQuery, [todoText, todoCg, userId], (err) => {
-      if (err) {
-        console.error('할 일 삭제 오류:', err);
-        return res.status(500).json({ error: '할 일 삭제 중 오류 발생' });
-      }
-      res.json({ message: '할 일이 성공적으로 삭제되었습니다.' });
-    });
-  } else {
-    res.status(400).json({ error: '할 일 정보가 부족합니다.' });
-  }
+  const deleteQuery = 'DELETE FROM Todo WHERE todoText = ? AND TodoCg = ? AND userId = ?';
+  connection.execute(deleteQuery, [todoText, todoCg, userId], (err) => {
+    if (err) {
+      console.error('할 일 삭제 오류:', err);
+      return res.status(500).json({ error: '할 일 삭제 중 오류 발생' });
+    }
+    console.log(`Todo deleted for userId: ${userId}, todoText: ${todoText}`);
+    res.json({ message: '할 일이 성공적으로 삭제되었습니다.' });
+  });
 });
 
 // 할 일 체크 상태 업데이트
