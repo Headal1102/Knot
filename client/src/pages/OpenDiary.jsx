@@ -1,119 +1,128 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
-
 import SideBar from './sideBar';
 import Diary from '../pages/Diary';
 
 import '../css/OpenDiary.css';
 
-function OpenDiary() {
-  const { id } = useParams();
+function OpenDiary(){
+  const userId=sessionStorage.getItem('userId');
+  const { DiaryCd } = useParams();
+  const [diaries, setDiaries] = useState([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
+  const [weather, setWeather] =useState('');
+  const ContentData={
+    userId:userId,
+    DiaryTitle:title,
+    DiaryText: content,
+    DiaryWeather:weather,
+    DiaryCd:DiaryCd
+  }
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetch(`http://localhost:8080/api/diaries/${id}`)
-      .then(response => response.json())
-      .then(data => {
-        setTitle(data.title);
-        setContent(data.content);
-      })
-      .catch(error => console.error('Error fetching diary:', error));
-  }, [id]);
-
-  const navtoDiary = () => {
-    navigate("/diary")
+  const navtoMain = () => {
+    navigate("/main");
   }
-
-  const DeleteDiary = () => {    
-    // 다이어리 삭제 API 호출 (DELETE 요청)
-    fetch(`http://localhost:5000/api/diaries/${id}`, {
-      method: 'DELETE',
-    })
-    .then(() => {
-      console.log('Diary deleted');
-      navigate("/diary"); // 삭제 후 다이어리 목록으로 이동
-    })
-    .catch(error => console.error('Error deleting diary:', error));
-
-  }
-
-  const EditDiary = (e) => {
-    document.getElementsByClassName("OpenDiaryTitle")[0].removeAttribute("readOnly")
-    document.getElementsByClassName("OpenDiaryContent")[0].removeAttribute("readOnly")
-    document.getElementsByClassName("Btn-ReturnDiary")[0].setAttribute("hidden", true)
-    document.getElementsByClassName("Btn-DeleteDiary")[0].setAttribute("hidden", true)
-    document.getElementsByClassName("Btn-EditDiary")[0].setAttribute("hidden", true)
-    document.getElementsByClassName("Btn-CancleDiary")[0].removeAttribute("hidden")
-    document.getElementsByClassName("Btn-SaveDiary")[0].removeAttribute("hidden")
-  }
-
-  const SaveDiary = (e) => {
-    fetch(`http://localhost:8080/api/diaries/${id}`, {
-      method: 'PUT',
+  const UpdateDiary = () => {
+    fetch('http://localhost:8080/api/diaries/update', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: title,
-        content: content,
-      }),
+      body: JSON.stringify(ContentData),
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Diary updated:', data);
-      document.getElementsByClassName("OpenDiaryTitle")[0].setAttribute("readOnly", true);
-      document.getElementsByClassName("OpenDiaryContent")[0].setAttribute("readOnly", true);
-      document.getElementsByClassName("Btn-ReturnDiary")[0].removeAttribute("hidden");
-      document.getElementsByClassName("Btn-DeleteDiary")[0].removeAttribute("hidden");
-      document.getElementsByClassName("Btn-EditDiary")[0].removeAttribute("hidden");
-      document.getElementsByClassName("Btn-CancleDiary")[0].setAttribute("hidden", true);
-      document.getElementsByClassName("Btn-SaveDiary")[0].setAttribute("hidden", true);
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      alert('다이어리 수정 완료!');
+      navigate('/main');
+    })}
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/diaries/${userId}/${DiaryCd}`, {
+      method: 'GET',
+      credentials: 'include',
     })
-    .catch(error => console.error('Error updating diary:', error));
-  }
-  
-  const CancleDiary = () => {
-    fetch(`http://localhost:8080/api/diaries/${id}`)
-      .then(response => response.json())
-      .then(data => {
-        setTitle(data.title);
-        setContent(data.content);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       })
-      .catch(error => console.error('Error reloading diary:', error));
-
-    document.getElementsByClassName("OpenDiaryTitle")[0].setAttribute("readOnly", true)
-    document.getElementsByClassName("OpenDiaryContent")[0].setAttribute("readOnly", true)
-    document.getElementsByClassName("Btn-ReturnDiary")[0].removeAttribute("hidden")
-    document.getElementsByClassName("Btn-DeleteDiary")[0].removeAttribute("hidden")
-    document.getElementsByClassName("Btn-EditDiary")[0].removeAttribute("hidden")
-    document.getElementsByClassName("Btn-CancleDiary")[0].setAttribute("hidden", true)
-    document.getElementsByClassName("Btn-SaveDiary")[0].setAttribute("hidden", true)
-  }
-
-
+      .then((data) => {
+        setDiaries(data);
+        setTitle(data.DiaryTitle); // 초기값 설정
+        setContent(data.DiaryText); // 초기값 설정
+        setWeather(data.DiaryWeather); // 초기값 설정
+      })
+      .catch((error) => {
+        console.error('Error fetching diaries:', error);
+      });
+  }, [userId, DiaryCd]);
+  const Delete= async()=>{
+    try {
+        const response = await fetch(`http://localhost:8080/api/diaries/delete`, {
+          method: 'POST',  // 수정할 때는 'POST'로 변경
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body:JSON.stringify(ContentData),
+        });
+  
+        if (response.ok) {
+          alert('삭제 완료.');
+          navigate('/main');
+        } else {
+          alert('삭제 실패.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('네트워크 오류가 발생했습니다.');
+      }
+}
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/diary' element={<Diary />} />
-        <Route path='/opendiary/:id' element={<OpenDiary />} />
-      </Routes>
-    </BrowserRouter>,
-    <>
-    <SideBar></SideBar>
-      <div className="OpenDiary-Box">
-        <input className="OpenDiaryTitle" defaultValue={ id } readOnly></input>
-        <textarea className="OpenDiaryContent" readOnly>{ id }</textarea>
-        <div className="OpenDiaryBtnGroup">
-            <button className="Btn-ReturnDiary" onClick={navtoDiary}>돌아가기</button>
-            <button className="Btn-DeleteDiary" onClick={DeleteDiary}>삭제하기</button>
-            <button className="Btn-EditDiary" onClick={EditDiary}>수정하기</button>
-            <button className="Btn-CancleDiary" onClick={CancleDiary} hidden>취소하기</button>
-            <button className="Btn-SaveDiary" onClick={SaveDiary} hidden>저장하기</button>
+    <div id="box">
+      <SideBar user={sessionStorage.userId}></SideBar>
+      <div id="NewDiary-box" className="NewDiary-Box">
+        <h2>오늘의 다이어리</h2>
+        <div id="diaryHead" className="Diary">
+          <input
+            className="NewDiaryTitle"
+            placeholder="제목"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)} // 상태 변경
+          />
+          <select
+            className="DiaryNew-Weather"
+            value={weather} // 초기값을 반영
+            onChange={(e) => setWeather(e.target.value)}
+          >
+            <option value="맑음">맑음</option>
+            <option value="흐림">흐림</option>
+            <option value="소나기">소나기</option>
+            <option value="비">비</option>
+            <option value="눈">눈</option>
+          </select>
+        </div>
+        <div className="Diary">
+          <textarea
+            className="NewDiaryContent"
+            placeholder="내용"
+            value={content}
+            onChange={(e) => setContent(e.target.value)} // 상태 변경
+          />
+        </div>
+        <div id="buttonBox" className="Diary">
+          <button className="Btn-CancelDiary" onClick={Delete}>
+            삭제하기
+          </button>
+          <button className="Btn-PostDiary" onClick={UpdateDiary}>
+            저장하기
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
+  
 }
+
 
 export default OpenDiary;
