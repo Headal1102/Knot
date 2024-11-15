@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, Link } from 'react-router-dom';
-import Login from './Login';
 import '../css/Index.css'
 import KnotLogo from '../assets/logo.png'
 import knot1 from '../assets/Knot1.png';

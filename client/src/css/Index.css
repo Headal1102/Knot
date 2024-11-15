@@ -10,9 +10,9 @@
     box-sizing: border-box;
     text-decoration: none;
 }
-/* body{
-    overflow-x: hidden;
-} */
+body{
+    overflow-y: hidden;
+}
 nav{
     position: sticky;
     top: 0;
