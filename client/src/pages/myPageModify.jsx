@@ -31,19 +31,23 @@ export default function MyPageModify() {
       .then((data) => {
         console.log('데이터:', data);
         if (data) {
+          const birthDate = new Date(data.userBirth); // 날짜를 Date 객체로 변환
+          const kstBirthDate = new Date(birthDate.getTime() + 9 * 60 * 60 * 1000); // UTC에서 KST로 변환
+  
           setUserInfo({
-            userId:user,
+            userId: user,
             userName: data.userName,
             userImg: data.userImg,
             userMsg: data.userMsg,
             userEmail: data.userEmail,
             userGender: data.userGender,
-            userBirth: data.userBirth,
+            userBirth: kstBirthDate.toISOString().substring(0, 10), // YYYY-MM-DD 형식으로 저장
           });
         }
       })
       .catch((error) => console.error('세션 정보 가져오기 오류:', error));
   }, [user]);
+  
 
   // 실시간으로 값 수정
   const handleChange = (e) => {

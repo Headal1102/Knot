@@ -4,7 +4,7 @@ import '../css/Diary.css';
 import '../css/DiaryList.css';
 import { FiPlusCircle } from "react-icons/fi";
 import DiaryList from './DiaryList';
-import { IoMdSearch } from "react-icons/io";
+import { RxReset } from "react-icons/rx";
 function Diary() {
   const navigate = useNavigate();
   const [date, setDate] = useState('');
@@ -14,7 +14,9 @@ function Diary() {
   const handleDateChange = (event) => {
       setDate(event.target.value);
   };
-
+  const reset=()=>{
+    window.location.reload();
+  }
   return (
     <>
       <div className="Main-Box">
@@ -27,7 +29,7 @@ function Diary() {
             <div className="Diary-Menu">
               <div className="Diary-NewDateForm">
               <input type="date" value={date} onChange={handleDateChange}/>
-              <IoMdSearch className="icon"></IoMdSearch>
+              <RxReset className='icon' onClick={reset}></RxReset>
               </div>
             </div>
             <DiaryList selectedDate={date}></DiaryList>

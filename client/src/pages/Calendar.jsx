@@ -40,6 +40,7 @@ export default function Calendar() {
     const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
     const formatted = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     setFormattedDate(formatted);
+    sessionStorage.setItem('selected',formatted);
   };
 
   const renderDays = () => {
