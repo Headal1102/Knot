@@ -27,12 +27,11 @@ export default function DiaryList(props) {
       .catch((error) => {
         setError(error.message);
       });
-  }, [userId]);
+  }, [userId,diaries]);
 
   // 선택된 날짜로 데이터 필터링
-  const filteredDiaries = selected
-    ? diaries.filter((diary) => diary.DiaryDate.startsWith(selected)) // 선택된 날짜와 일치하는 데이터만
-    : diaries; // 선택된 날짜가 없으면 전체 데이터
+  const filteredDiaries = selected? diaries.filter((diary) => diary.DiaryDate.startsWith(selected)) // 선택된 날짜와 일치하는 데이터만
+: diaries; // 선택된 날짜가 없으면 전체 데이터
 
   const navtoOpenDiary = (DiaryCd) => {
     navigate(`/opendiary/${DiaryCd}`);
