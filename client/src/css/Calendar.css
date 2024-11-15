@@ -13,9 +13,9 @@
 .Calendar-Box {
     height: 100%;
 } */
- body{
+ /* body{
   overflow: hidden;
- }
+ } */
 .calendar-container {
   position: relative;
   width: 100%;

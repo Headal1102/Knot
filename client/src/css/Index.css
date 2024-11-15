@@ -11,7 +11,7 @@
     text-decoration: none;
 }
 body{
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 nav{
     position: sticky;
