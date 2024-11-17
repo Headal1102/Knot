@@ -20,38 +20,46 @@ function Todo({ selectedDate }) {
 
   const fetchData = async (date) => {
     try {
-      const targetDate = date || defaultDate;
-      const sectionsResponse = await fetch('http://localhost:8080/api/todo/sections', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
-        credentials: 'include',
-      });
-      const todosResponse = await fetch('http://localhost:8080/api/todo/todos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, todoDate: targetDate }),
-        credentials: 'include',
-      });
+        const targetDate = date || defaultDate;
+        const sectionsResponse = await fetch('http://localhost:8080/api/todo/sections', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId }),
+            credentials: 'include',
+        });
+        const todosResponse = await fetch('http://localhost:8080/api/todo/todos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, todoDate: targetDate }),
+            credentials: 'include',
+        });
 
-      if (!sectionsResponse.ok) throw new Error('섹션 데이터 불러오기 실패');
-      if (!todosResponse.ok) throw new Error('할 일 데이터 불러오기 실패');
+        if (!sectionsResponse.ok) throw new Error('섹션 데이터 불러오기 실패');
+        if (!todosResponse.ok) throw new Error('할 일 데이터 불러오기 실패');
 
-      const sectionsData = await sectionsResponse.json();
-      const todosData = await todosResponse.json();
+        const sectionsData = await sectionsResponse.json();
+        const todosData = await todosResponse.json();
 
-      setSections(sectionsData);
-      setTodos(todosData);
+        // 섹션 정렬: 별이 활성화된 섹션을 맨 앞으로 유지
+        const sortedSections = [...sectionsData].sort((a, b) => {
+            if (a.TodoCgIndex === 'y' && b.TodoCgIndex !== 'y') return -1;
+            if (a.TodoCgIndex !== 'y' && b.TodoCgIndex === 'y') return 1;
+            return sections.findIndex(sec => sec.TodoCg === a.TodoCg) - sections.findIndex(sec => sec.TodoCg === b.TodoCg); // 기존 순서 유지
+        });
 
-      if (sectionsData.length > 0) {
-        setActiveTab(sectionsData[0].TodoCg);
-      } else {
-        setActiveTab(null);
-      }
+        setSections(sortedSections);
+        setTodos(todosData);
+
+        // 활성 섹션이 없는 경우에만 첫 번째 섹션을 활성화
+        if (!activeTab && sortedSections.length > 0) {
+            setActiveTab(sortedSections[0].TodoCg);
+        }
     } catch (error) {
-      console.error('데이터 로딩 중 오류:', error);
+        console.error('데이터 로딩 중 오류:', error);
     }
-  };
+};
+
+  
 
   useEffect(() => {
     fetchData(selectedDate);
@@ -60,25 +68,25 @@ function Todo({ selectedDate }) {
   const addSection = async () => {
     let newSectionNumber = 1;
     let newSectionName = `섹션 ${newSectionNumber}`;
-
+  
     while (sections.some(section => section.TodoCg === newSectionName)) {
       newSectionNumber += 1;
       newSectionName = `섹션 ${newSectionNumber}`;
     }
-
+  
     const newSection = { todosection: newSectionName, userId };
     const response = await fetch('http://localhost:8080/api/todo/addSection', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newSection),
-      credentials: 'include'
+      credentials: 'include',
     });
-
+  
     if (response.ok) {
       const data = await response.json();
       if (data.section && data.section.TodoCg) {
-        setSections([...sections, data.section]);
-        setActiveTab(data.section.TodoCg);
+        setSections(prevSections => [...prevSections, data.section]); // 새 섹션을 로컬 상태에 추가
+        setActiveTab(data.section.TodoCg); // 새 섹션을 활성화
       } else {
         console.error('서버에서 반환된 섹션 데이터에 TodoCg가 없습니다.');
       }
@@ -89,35 +97,58 @@ function Todo({ selectedDate }) {
 
   const addTodo = async () => {
     if (!activeTab) {
-      console.error('활성화된 섹션이 없습니다.');
-      return;
+        console.error('활성화된 섹션이 없습니다.');
+        return;
     }
-  
+
     const newTodoText = `새 할일`;
     const newTodo = { todoText: newTodoText, todoCg: activeTab, userId, todoDate: defaultDate };
-  
-    try {
-      const response = await fetch('http://localhost:8080/api/todo/addTodo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTodo),
-        credentials: 'include',
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        const addedTodo = result.todos[result.todos.length - 1]; // 방금 추가된 할 일만 가져옵니다.
-        setTodos((prevTodos) => [...prevTodos, addedTodo]); // 새로운 할 일을 기존 할 일 목록에 추가하여 즉시 화면에 반영합니다.
-        fetchData(selectedDate); // 전체 데이터를 다시 로드하여 새로고침 없이 화면을 갱신합니다.
-      } else {
-        console.error('할 일 추가 중 오류 발생');
-      }
-    } catch (error) {
-      console.error('할 일 추가 요청 중 오류:', error);
-    }
-  };
-  
 
+    try {
+        const response = await fetch('http://localhost:8080/api/todo/addTodo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newTodo),
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+
+            if (result && result.todos && result.todos.length > 0) {
+                // 추가된 할 일을 필터링하여 추가
+                const addedTodo = result.todos.find(
+                    (todo) => todo.todoText === newTodoText && todo.todoCg === activeTab
+                );
+
+                if (addedTodo) {
+                    console.log('할 일이 성공적으로 추가되었습니다:', addedTodo);
+                } else {
+                    console.error('추가된 할 일을 찾을 수 없습니다:', result);
+                }
+            } else {
+                console.error('서버에서 반환된 할 일 데이터가 없습니다:', result);
+            }
+
+            // 현재 활성 탭 저장
+            const currentActiveTab = activeTab;
+
+            // 할 일 추가 후 전체 데이터를 다시 로드
+            await fetchData(defaultDate); // 화면에 즉시 반영
+
+            // 활성 섹션 유지
+            setActiveTab(currentActiveTab);
+        } else {
+            console.error('할 일 추가 중 오류 발생:', response.status, response.statusText);
+        }
+    } catch (error) {
+        console.error('할 일 추가 요청 중 오류:', error);
+    }
+
+    // 섹션 순서를 유지
+    setSections((prevSections) => [...prevSections]);
+};  
+      
   const saveSectionEdit = async (sectionId) => {
     if (!editedSectionName) {
       console.error('섹션 이름이 비어 있습니다.');
@@ -148,18 +179,36 @@ function Todo({ selectedDate }) {
   };
 
   const deleteSection = async (sectionId) => {
-    const response = await fetch('http://localhost:8080/api/todo/dropSection', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ todosection: sectionId, userId }),
-      credentials: 'include',
-    });
+    try {
+        const response = await fetch('http://localhost:8080/api/todo/dropSection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ todosection: sectionId, userId }),
+            credentials: 'include',
+        });
 
-    if (response.ok) {
-      setSections(sections.filter((section) => section.TodoCg !== sectionId));
-      if (activeTab === sectionId) setActiveTab(null);
+        if (response.ok) {
+            const updatedSections = sections.filter((section) => section.TodoCg !== sectionId);
+
+            // 다음 섹션을 활성화
+            const currentIndex = sections.findIndex((section) => section.TodoCg === sectionId);
+            const nextIndex = currentIndex + 1 < updatedSections.length ? currentIndex : currentIndex - 1;
+            const nextTab = updatedSections[nextIndex]?.TodoCg || null;
+
+            setSections(updatedSections);
+            setActiveTab(nextTab);
+
+            // 데이터 새로 로드
+            fetchData(defaultDate);
+        } else {
+            console.error('섹션 삭제 중 오류 발생');
+        }
+    } catch (error) {
+        console.error('섹션 삭제 요청 중 오류:', error);
     }
-  };
+};
+
+  
 
   const deleteTodo = async (todoCd) => {
     try {
@@ -186,7 +235,15 @@ function Todo({ selectedDate }) {
         ? { ...section, TodoCgIndex: section.TodoCgIndex === 'y' ? 'n' : 'y' }
         : section
     );
-    setSections(updatedSections);
+  
+    // 별이 활성화된 섹션만 정렬하도록 수정
+    const sortedSections = [...updatedSections].sort((a, b) => {
+      if (a.TodoCgIndex === 'y' && b.TodoCgIndex !== 'y') return -1; // 별이 있는 섹션 우선
+      if (a.TodoCgIndex !== 'y' && b.TodoCgIndex === 'y') return 1;  // 별이 없는 섹션 뒤로
+      return sections.indexOf(a) - sections.indexOf(b); // 기존 순서 유지
+    });
+  
+    setSections(sortedSections); // 정렬된 섹션 업데이트
   
     try {
       const response = await fetch('http://localhost:8080/api/todo/updateTodoCgIndex', {
@@ -206,6 +263,8 @@ function Todo({ selectedDate }) {
       console.error('서버와의 통신 오류:', error);
     }
   };
+  
+  
  
 
   const toggleCompleted = async (todoCd) => {
@@ -345,37 +404,37 @@ function Todo({ selectedDate }) {
                     />
                     
                     {todo.editing ? (
-                      <input
-                        type="text"
-                        value={editContent[todo.todoCd] || todo.todoText}
-                        onChange={(e) => handleEditContentChange(todo.todoCd, e)}
-                        onBlur={() => {
-                          if (todo.todoCd) {
-                            console.log('todoCd on blur:', todo.todoCd);
-                            editTodo(todo.todoCd, editContent[todo.todoCd] || todo.todoText);
-                            setTodos(todos.map(t => t.todoCd === todo.todoCd ? { ...t, editing: false } : t)); // 수정 후 editing을 false로 설정
-                          } else {
-                            console.error('todoCd is undefined for todo:', todo);
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            if (todo.todoCd) {
-                              console.log('todoCd on Enter:', todo.todoCd);
-                              editTodo(todo.todoCd, editContent[todo.todoCd] || todo.todoText);
-                              setTodos(todos.map(t => t.todoCd === todo.todoCd ? { ...t, editing: false } : t)); // 수정 후 editing을 false로 설정
-                            } else {
-                              console.error('todoCd is undefined for todo:', todo);
-                            }
-                          }
-                        }}
-                        
-                      />
-                    ) : (
-                      <span onDoubleClick={() => startEditingTodo(todo.todoCd, todo.todoText)}>
-                        {todo.todoText}
-                      </span>
-                    )}
+  <input
+    type="text"
+    value={editContent[todo.todoCd] !== undefined ? editContent[todo.todoCd] : todo.todoText}
+    onChange={(e) => handleEditContentChange(todo.todoCd, e)}
+    onBlur={() => {
+      if (todo.todoCd) {
+        const newTodoText = editContent[todo.todoCd]?.trim() || todo.todoText; // 비어있는 경우 기존 텍스트 유지
+        editTodo(todo.todoCd, newTodoText);
+        setTodos(todos.map(t => t.todoCd === todo.todoCd ? { ...t, editing: false } : t)); // 수정 후 editing을 false로 설정
+      } else {
+        console.error('todoCd is undefined for todo:', todo);
+      }
+    }}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter') {
+        if (todo.todoCd) {
+          const newTodoText = editContent[todo.todoCd]?.trim() || todo.todoText; // 비어있는 경우 기존 텍스트 유지
+          editTodo(todo.todoCd, newTodoText);
+          setTodos(todos.map(t => t.todoCd === todo.todoCd ? { ...t, editing: false } : t)); // 수정 후 editing을 false로 설정
+        } else {
+          console.error('todoCd is undefined for todo:', todo);
+        }
+      }
+    }}
+  />
+) : (
+  <span onDoubleClick={() => startEditingTodo(todo.todoCd, todo.todoText)}>
+    {todo.todoText}
+  </span>
+)}
+
 
                     <span className="todo-date">{formatDate(todo.todoDate)}</span>
                     <div style={{ marginLeft: 'auto', display: 'flex', gap: '5px' }}>
