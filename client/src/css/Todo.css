@@ -1,4 +1,3 @@
-
 *{
   margin: 0;
   padding: 0;
@@ -11,14 +10,13 @@ svg{
 .app-container {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 90%;
   /* left: -250px;
   bottom: -300px; */
 }
 #todolistHead{
   position: relative;
   padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
   border-bottom: 5px solid black;
 }
 /* 전체 컨테이너 스타일 */
@@ -47,52 +45,27 @@ svg{
   display: flex;
   align-items:end;
 }
-/* .tab-container {
-  margin: auto; */
-  /* max-width: 500px; 최대 너비 설정 */
-  /* display: flex;
-  align-items: center; */
-  /* height: 40px; 높이 설정 */
-/* } */
 
 .arrow-btn{
 }
-/* .arrow-btn {
-  background-color: #67dec2;
-  color: white;
-  border: none;
-  padding: 5px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin: 0 5px; /* 버튼 간격 */
-/* } */ 
 
-/* .arrow-btn:disabled {
-  background-color: #c3e7e5;
-  cursor: not-allowed; /* 비활성화 시 커서 모양 */
-/* } */
 
 h2 {
   margin-right: 10px;
   white-space: nowrap;
+  margin-bottom: 0;
 }
-
 .tab {
   position: relative;
   width: 150px;
   color: #2c2c2c;
   background-color: #ffffff;
-  display: flex;
-  justify-content: space-between; /* Space between section name and icon */
-  align-items: center; /* Align items vertically */
-  padding: 10px;
-  margin-right: 10px; /* Space between tabs */
-  border: 1px solid #ccc;
-  border-radius: 5px; /* Rounded corners */
+  margin: 0;
 }
 .active-tab{
   background-color: #67dec2;
 }
+
 .tab-name {
   width: 60px;
   padding: 10px;
@@ -105,16 +78,11 @@ h2 {
   text-align: center;
 }
 .add-tab-btn {
+  margin: 0;
   display: flex;
   align-items: center;
   position: relative;
 }
-/* .add-tab-btn {
-  background-color: white;
-  border: none;
-  cursor: pointer;
-} */
-
 /* 섹션 내용 스타일 */
 .section-content {
   padding: 20px;
@@ -123,32 +91,28 @@ h2 {
   background-color: white;
 }
 
+.tab-wrapper input[type="text"] {
+  display: flex;
+  align-items: center;
+}
+
 .tab-wrapper {
   display: flex;
   align-items: center;
-  position: relative;
-  margin-right: 10px; /* Space between tabs */
+}
+
+.tab-wrapper {
+  display: flex;
+  align-items: center;
 }
 .delete-section-btn{
   position: relative;
-  width: 20%;
-  background: #2c2c2c;
-  margin-left: auto;
+  width: 10%;
+  margin-right: 0;
+  min-width: 5rem;
+  font-size: 1.5rem;
   margin-bottom: 0;
 }
-
-
-/* .delete-section-btn {
-  padding: 10px 15px;
-  background-color: red;
-  color: white;
-  cursor: pointer;
-  margin-left: auto;
-  border: none;
-  border-radius: 5px;
-  white-space: nowrap;
-} */
-
 /* 할일 리스트 스타일 */
 .todo-list {
     margin-top: 10px;
@@ -161,26 +125,17 @@ h2 {
 }
 
 .todo-item {
-  min-height: 60px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  padding: 0 1rem;
-  border: 2px solid black;
-  border-radius: 8px;
-  position: relative;
-}
-
-/* 투두 항목 색상 구분 */
-.todo-item.completed {
-  background-color: #9FC0B8; /* 완료된 항목은 연한 초록색 */
-  text-decoration: line-through;
-}
-
-.todo-item.not-completed {
-  background-color: #c3e7e5; /* 미완료 항목은 흰색 배경 */
+    min-height: 60px;
+    display: flex;
+    flex-direction: row; /* 세로 배치로 변경 */
+    align-items: center;
+    justify-content: center;
+    background-color: #c3e7e5;
+    margin-bottom: 10px;
+    padding: 0 1rem;
+    border: 2px solid black;
+    border-radius: 8px;
+    position: relative;
 }
 
 .todo-dt {
@@ -189,9 +144,9 @@ h2 {
 }
 
 .todo-date {
-  font-size: 0.8rem;
-  color: gray;
-  margin-left: 10px;
+  margin-bottom: 10px; /* 아래쪽 간격 조정 */
+  font-size: 14px;
+  color: #555;
 }
 
 .todo-content {
@@ -232,32 +187,29 @@ h2 {
   padding: 8px;
   cursor: pointer;
   width: 10rem;
-  margin-top: 10px;
   display: block;
 }
-
-.todo-section {
-  display: flex;
-  align-items: center;
-}
-
-button {
-  background: none;
-  border: none;
+#Todoindex button{
+  text-align: center;
+  display: grid;
+  grid-template-columns: 8fr 1fr;
   cursor: pointer;
-  display: inline-block;
+  font-size: 1.1rem;
+}
+.star-icon-btn{
+  color:rgb(255, 208, 0);
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
 }
 
-.star-icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem; /* Size of the star icon */
-  padding: 0; 
-  color: #f39c12;
-}
-.star-icon-btn:hover {
-  color: #e67e22; /* Hover effect for the star */
+/* 체크 상태일 때 색상 변경 */
+.todo-item.completed {
+  background-color: #8ba4a4; /* 체크 상태 색상 */
+  text-decoration: line-through;
 }
 
-#todoIndex{display:inline-block;}
+.todo-item.not-completed {
+  background-color: #c3e7e5; /* 기본 색상 */
+  color: black; /* 기본 텍스트 색상 */
+}
