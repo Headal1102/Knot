@@ -32,7 +32,7 @@ router.post('/sections', (req, res) => {
     return res.status(400).json({ error: '세션에 사용자 정보가 없습니다.' });
   }
 
-  const query = 'SELECT DISTINCT userId, TodoCg, TodoCgIndex FROM Todo WHERE userId = ?;';
+  const query = 'SELECT DISTINCT userId, TodoCg, TodoCgIndex FROM todo WHERE userId = ?;';
   connection.execute(query, [userId], (err, results) => {
     if (err) {
       console.error('쿼리 실행 오류:', err);
@@ -47,7 +47,7 @@ router.post('/addSection', (req, res) => {
   const { todosection, userId } = req.body;
 
   if (todosection && userId) {
-    const query = 'INSERT INTO Todo (TodoCg, userId) VALUES (?, ?)';
+    const query = 'INSERT INTO todo (TodoCg, userId) VALUES (?, ?)';
     connection.execute(query, [todosection, userId], (error) => {
       if (error) {
         console.error('데이터 삽입 오류:', error);
@@ -64,7 +64,7 @@ router.post('/addSection', (req, res) => {
 router.post('/dropSection', (req, res) => {
   const { todosection, userId } = req.body;
   if (todosection && userId) {
-    const deleteQuery = 'DELETE FROM Todo WHERE TodoCg = ? AND userId = ?';
+    const deleteQuery = 'DELETE FROM todo WHERE TodoCg = ? AND userId = ?';
     connection.execute(deleteQuery, [todosection, userId], (err) => {
       if (err) {
         console.error('섹션 삭제 오류:', err);
@@ -85,7 +85,7 @@ router.post('/changeSection', (req, res) => {
     return res.status(400).json({ error: '현재 섹션 이름 또는 새 섹션 이름이 제공되지 않았거나 사용자 정보가 없습니다.' });
   }
 
-  const updateQuery = 'UPDATE Todo SET TodoCg = ? WHERE TodoCg = ? AND userId = ?';
+  const updateQuery = 'UPDATE todo SET TodoCg = ? WHERE TodoCg = ? AND userId = ?';
   connection.execute(updateQuery, [newSection, oldSection, userId], (err, results) => {
     if (err) {
       console.error('섹션 수정 오류:', err);
@@ -101,8 +101,7 @@ router.post('/todos', (req, res) => {
   console.log(`Fetching todos for userId: ${userId}, date: ${todoDate}`);
   
   const query = `
-    SELECT todoCd, userId, todoText, todoCheck, DATE_FORMAT(todoDate, "%Y-%m-%d") as todoDate, todoCg 
-    FROM Todo 
+    SELECT todoCd, userId, todoText, todoCheck, DATE_FORMAT(todoDate, "%Y-%m-%d") as todoDate, todoCg FROM todo 
     WHERE userId = ? AND DATE_FORMAT(todoDate, "%Y-%m-%d") = ? AND todoText IS NOT NULL
   `;
   connection.execute(query, [userId, todoDate], (err, results) => {
@@ -124,10 +123,7 @@ router.post('/monthly-todos', (req, res) => {
   }
 
   const query = `
-    SELECT todoDate
-    FROM Todo
-    WHERE userId = ? AND YEAR(todoDate) = ? AND MONTH(todoDate) = ?
-    AND todoText IS NOT NULL
+    SELECT todoDate FROM todo WHERE userId = ? AND YEAR(todoDate) = ? AND MONTH(todoDate) = ? AND todoText IS NOT NULL
   `;
   connection.execute(query, [userId, year, month], (err, results) => {
     if (err) {
@@ -150,7 +146,7 @@ router.post('/addTodo', (req, res) => {
   }
 
   // 현재 섹션의 TodoCgIndex 값 조회
-  const checkSectionIndexQuery = 'SELECT TodoCgIndex FROM Todo WHERE TodoCg = ? AND userId = ? LIMIT 1';
+  const checkSectionIndexQuery = 'SELECT TodoCgIndex FROM todo WHERE TodoCg = ? AND userId = ? LIMIT 1';
   connection.execute(checkSectionIndexQuery, [todoCg, userId], (err, results) => {
     if (err) {
       console.error('섹션 인덱스 조회 오류:', err);
@@ -161,7 +157,7 @@ router.post('/addTodo', (req, res) => {
     const todoCgIndex = results.length > 0 && results[0].TodoCgIndex === 'y' ? 'y' : 'n';
 
     // 새로운 할 일 생성 쿼리
-    const insertTodoQuery = 'INSERT INTO Todo (todoText, todoCheck, todoDate, userId, todoCg, TodoCgIndex) VALUES (?, ?, ?, ?, ?, ?)';
+    const insertTodoQuery = 'INSERT INTO todo (TodoText, TodoCheck, TodoDate, userId, TodoCg, TodoCgIndex) VALUES (?, ?, ?, ?, ?, ?)';
     connection.execute(insertTodoQuery, [todoText, 'n', dateToInsert, userId, todoCg, todoCgIndex], (insertErr) => {
       if (insertErr) {
         console.error('할 일 생성 오류:', insertErr);
@@ -170,7 +166,7 @@ router.post('/addTodo', (req, res) => {
       console.log(`Todo added for date ${dateToInsert}: ${todoText} with TodoCgIndex: ${todoCgIndex}`);
 
       // 새로 생성한 할 일이 포함된 목록을 조회하여 반환
-      const fetchTodosQuery = 'SELECT * FROM Todo WHERE userId = ? AND DATE_FORMAT(todoDate, "%Y-%m-%d") = ? AND todoText IS NOT NULL';
+      const fetchTodosQuery = 'SELECT * FROM todo WHERE userId = ? AND DATE_FORMAT(todoDate, "%Y-%m-%d") = ? AND todoText IS NOT NULL';
       connection.execute(fetchTodosQuery, [userId, dateToInsert], (fetchErr, results) => {
         if (fetchErr) {
           console.error('할 일 조회 오류:', fetchErr);
@@ -197,7 +193,7 @@ router.post('/editTodo', (req, res) => {
     return res.status(400).json({ message: '모든 필드를 입력하세요.' });
   }
 
-  const query = 'UPDATE Todo SET todoText = ? WHERE todoCd = ? AND userId = ?';
+  const query = 'UPDATE todo SET todoText = ? WHERE todoCd = ? AND userId = ?';
   connection.execute(query, [newTodoText, todoCd, userId], (err) => {
     if (err) {
       console.error('할 일 수정 오류:', err);
@@ -213,7 +209,7 @@ router.post('/deleteTodo', (req, res) => {
   const { todoCd, userId } = req.body;
   console.log(`Deleting todo for userId: ${userId}, todoCd: ${todoCd}`);
 
-  const deleteQuery = 'DELETE FROM Todo WHERE todoCd = ? AND userId = ?';
+  const deleteQuery = 'DELETE FROM todo WHERE todoCd = ? AND userId = ?';
   connection.execute(deleteQuery, [todoCd, userId], (err) => {
     if (err) {
       console.error('할 일 삭제 오류:', err);
@@ -233,7 +229,7 @@ router.post('/toggleTodoCheck', (req, res) => {
     return res.status(400).json({ message: '모든 필드를 입력하세요.' });
   }
 
-  const currentCheckQuery = 'SELECT todoCheck FROM Todo WHERE todoCd = ? AND userId = ? AND todoCg = ?';
+  const currentCheckQuery = 'SELECT todoCheck FROM todo WHERE todoCd = ? AND userId = ? AND todoCg = ?';
   connection.execute(currentCheckQuery, [todoCd, userId, todoCg], (err, rows) => {
     if (err) {
       console.error('데이터 조회 오류:', err);
@@ -243,7 +239,7 @@ router.post('/toggleTodoCheck', (req, res) => {
     if (rows.length > 0) {
       const currentCheck = rows[0].todoCheck;
       const newCheck = currentCheck === 'n' ? 'y' : 'n';
-      const updateQuery = 'UPDATE Todo SET todoCheck = ? WHERE todoCd = ? AND userId = ? AND todoCg = ?';
+      const updateQuery = 'UPDATE todo SET todoCheck = ? WHERE todoCd = ? AND userId = ? AND todoCg = ?';
       connection.execute(updateQuery, [newCheck, todoCd, userId, todoCg], (err) => {
         if (err) {
           console.error('체크 상태 업데이트 오류:', err);
@@ -265,7 +261,7 @@ router.post('/updateTodoCgIndex', (req, res) => {
     return res.status(400).json({ message: '모든 필드를 입력하세요.' });
   }
 
-  const updateQuery = 'UPDATE Todo SET TodoCgIndex = ? WHERE TodoCg = ? AND userId = ?';
+  const updateQuery = 'UPDATE todo SET TodoCgIndex = ? WHERE TodoCg = ? AND userId = ?';
   connection.execute(updateQuery, [TodoCgIndex, sectionId, userId], (err) => {
     if (err) {
       console.error('TodoCgIndex 업데이트 오류:', err);
