@@ -18,7 +18,7 @@ export default function AnswerId(){
                 <h2>아이디</h2>
                 <h1>{userId}</h1>
             </div>
-            <div id='links'>
+            <div id='Answerlinks'>
                 <span onClick={() => {destroy(); navigate('/FindPw');}}>비밀번호 찾기</span>
                 <span onClick={() => {destroy(); navigate('/Login');}}>로그인</span>
             </div>

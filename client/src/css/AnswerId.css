@@ -34,11 +34,11 @@
 #AnswerId h2{
     color: #505050;
 }
-#links{
+#Answerlinks{
     position: relative;
-    /* margin: auto; */
+    margin: auto;
     cursor: pointer;
 }
-#links span:hover{
+#Answerlinks span:hover{
     color:#67DEC2;
 }
